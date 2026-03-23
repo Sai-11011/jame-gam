@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="jame-gam"
+config/name="coin-fountain-sweeper"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
