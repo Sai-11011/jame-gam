@@ -10,8 +10,12 @@ config_version=5
 
 [application]
 
+<<<<<<< HEAD
 config/name="CoinFountainSweeper"
 run/main_scene="uid://dq185ba7g7220"
+=======
+config/name="coin-fountain-sweeper"
+>>>>>>> bb492dd645dd5f3d98128c6851d5a2dc371ddc65
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
