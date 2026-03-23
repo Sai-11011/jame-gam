@@ -1,8 +1,12 @@
 extends Node
 
+var is_game_over := false
+
 const SCENES :Dictionary = {
 	"main":"uid://dq185ba7g7220",
 	"coin":"uid://buw41pk3sscrb",
+	"sparkle":"uid://bih7g88xl275c",
+	"splash":"uid://chi47vo2opelm"
 }
 
 const COIN_TYPES :Dictionary = {

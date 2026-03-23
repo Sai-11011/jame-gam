@@ -71,14 +71,13 @@ shape = SubResource("RectangleShape2D_8gbba")
 offset_left = 240.0
 offset_top = 260.0
 offset_right = 1040.0
-offset_bottom = 270.0
+offset_bottom = 265.0
 mouse_filter = 2
 color = Color(1, 0, 0, 1)
 
 [node name="Timers" type="Node" parent="." unique_id=2108689419]
 
 [node name="SpawnTimer" type="Timer" parent="Timers" unique_id=1475968178]
-wait_time = 0.2
 autostart = true
 
 [node name="Walls" type="StaticBody2D" parent="." unique_id=345947501]
