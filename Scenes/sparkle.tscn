@@ -1,7 +1,13 @@
 [gd_scene format=3 uid="uid://bih7g88xl275c"]
 
 [ext_resource type="Script" uid="uid://lsa1i3uml64a" path="res://Scripts/sparkle.gd" id="1_fjdfe"]
-[ext_resource type="Texture2D" uid="uid://b1n7mimjfxwr4" path="res://Assets/extras/Sparkel.png" id="1_q3cwc"]
+[ext_resource type="Texture2D" uid="uid://bl5l5uvn3civ5" path="res://Assets/UI/click.png" id="1_q3cwc"]
+
+[sub_resource type="Gradient" id="Gradient_q3cwc"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_m7k0b"]
+gradient = SubResource("Gradient_q3cwc")
 
 [sub_resource type="Curve" id="Curve_q3cwc"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -14,13 +20,18 @@ curve = SubResource("Curve_q3cwc")
 particle_flag_disable_z = true
 emission_shape = 1
 emission_sphere_radius = 10.0
+angle_min = 1.0728835e-05
+angle_max = 360.00003
 spread = 180.0
 initial_velocity_min = 100.0
 initial_velocity_max = 200.0
+angular_velocity_min = -200.00002
+angular_velocity_max = 199.99998
 gravity = Vector3(0, 0, 0)
 scale_min = 0.0
 scale_max = 0.099999994
 scale_curve = SubResource("CurveTexture_m7k0b")
+color_ramp = SubResource("GradientTexture1D_m7k0b")
 
 [node name="Sparkle" type="GPUParticles2D" unique_id=222286477]
 emitting = false

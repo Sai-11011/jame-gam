@@ -5,14 +5,18 @@ extends Node2D
 @onready var splash_scene: PackedScene = load(Global.SCENES.splash)
 @onready var spawn_timer: Timer = $Timers/SpawnTimer
 @onready var water_rect: ColorRect = $FountainPlaceholders/CanvasGroup/WaterIncrease
+@onready var coin_container: Node = $CoinContainer
+@onready var effects_container: Node = $EffectsContainer
+@onready var game_over_scene: Control = $CanvasLayer/GameOver 
 
 var water_tween: Tween
-var score: int = 0 
 var floor_y_position: float = 360.0
 var total_water_displacement: float = 0.0 
 
 func _ready() -> void:
 	Global.is_game_over = false
+	get_tree().paused = false
+	PlayerData.reset_stats()
 
 func _on_spawn_timer_timeout() -> void:
 	spawn_coin()
@@ -45,20 +49,20 @@ func spawn_coin() -> void:
 		new_coin.linear_velocity = Vector2(randf_range(-200.0, -450.0), randf_range(-200.0, -400.0))
 
 	new_coin.clicked.connect(_on_coin_clicked)
-	add_child(new_coin)
+	coin_container.add_child(new_coin)
 
 func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
 	# 1. Spawn the Sparkle Juice!
 	if sparkle_scene:
 		var new_sparkle = sparkle_scene.instantiate()
 		new_sparkle.global_position = clicked_coin.global_position
-		add_child(new_sparkle)
+		effects_container.add_child(new_sparkle)
 		
 	# 2. Existing score and water math...
-	score += 1
+	PlayerData.score += 1
 	total_water_displacement -= clicked_coin.water_increase
 	update_water_level()
-	print("Coin collected! Score: ", score)
+	print("Coin collected! Score: ", PlayerData.score)
 	
 	get_tree().call_group("Coins", "wake_up")
 
@@ -88,6 +92,8 @@ func update_water_level() -> void:
 	if target_y_pos <= 250.0:
 		print("GAME OVER! The fountain overflowed!")
 		Global.is_game_over = true
+		get_tree().paused = true
+		game_over_scene.show()
 		spawn_timer.stop()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
@@ -97,7 +103,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			var new_splash = splash_scene.instantiate()
 			# Spawn it at the coin's X, but lock the Y to the top of the water
 			new_splash.global_position = Vector2(body.global_position.x, water_rect.position.y)
-			add_child(new_splash)
+			effects_container.add_child(new_splash)
 			
 		# 2. Existing water math...
 		total_water_displacement += body.water_increase

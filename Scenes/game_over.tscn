@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cbfhggauibbmm"]
+
+[ext_resource type="Script" uid="uid://dnhqs5ekifleb" path="res://Scripts/game_over.gd" id="1_ojehl"]
+
+[node name="GameOver" type="Control" unique_id=528653836]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ojehl")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1919980606]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1254902, 0.1254902, 0.1254902, 0.1254902)
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=361298229]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=839712239]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="GameOver" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1645184011]
+layout_mode = 2
+theme_override_font_sizes/font_size = 56
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=1554523017]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="Time" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1575611256]
+layout_mode = 2
+
+[node name="Score" type="Label" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1026824562]
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1194096172]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Restart"
+
+[node name="MenuButton" type="Button" parent="MarginContainer/VBoxContainer" unique_id=1543324536]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Menu"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/MenuButton" to="." method="_on_menu_button_pressed"]
