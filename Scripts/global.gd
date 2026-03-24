@@ -6,7 +6,9 @@ const SCENES :Dictionary = {
 	"main":"uid://dq185ba7g7220",
 	"coin":"uid://buw41pk3sscrb",
 	"sparkle":"uid://bih7g88xl275c",
-	"splash":"uid://chi47vo2opelm"
+	"splash":"uid://chi47vo2opelm",
+	"start":"uid://b3k3jajoe6tme",
+	"game_over":"",
 }
 
 const COIN_TYPES :Dictionary = {

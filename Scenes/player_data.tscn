@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://cxum1uvslgl0u"]
+
+[ext_resource type="Script" uid="uid://dp1l8gu1asv7i" path="res://Scripts/player_data.gd" id="1_retao"]
+
+[node name="PlayerData" type="Node" unique_id=586337602]
+script = ExtResource("1_retao")
+
+[node name="Timer" type="Timer" parent="." unique_id=1973890251]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

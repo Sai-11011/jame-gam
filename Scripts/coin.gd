@@ -10,20 +10,13 @@ var water_increase: float = 0.0
 var coin_material: String = "" 
 var is_settled: bool = false 
 
-# NEW: We create a variable to hold the dictionary so _ready() can read it
 var my_coin_data: Dictionary
 
 func setup(coin_data: Dictionary) -> void:
-	# 1. Save the dictionary for later
 	my_coin_data = coin_data
 	
-	# 2. Math and Physics are perfectly safe to do before add_child
 	mass = coin_data["weight"]
 	
-	# (Keeping your scale property just in case you added it to Global!)
-	if coin_data.has("scale"):
-		scale = coin_data["scale"]
-		
 	var phys_mat = PhysicsMaterial.new()
 	phys_mat.bounce = coin_data["bounce"]
 	phys_mat.friction = coin_data["friction"]
@@ -32,7 +25,6 @@ func setup(coin_data: Dictionary) -> void:
 	water_increase = coin_data["water_increase"]
 	coin_material = coin_data["type"] 
 	
-	add_to_group("Coins")
 
 func _ready() -> void:
 	if randf() > 0.5:

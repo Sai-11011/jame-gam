@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://dq185ba7g7220"]
 
 [ext_resource type="Script" uid="uid://bb8mr16xnyrry" path="res://Scripts/main.gd" id="1_jjgbg"]
+[ext_resource type="PackedScene" uid="uid://cbfhggauibbmm" path="res://Scenes/game_over.tscn" id="2_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://pksoanceu5r1" path="res://Scenes/hud.tscn" id="3_8gbba"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8gbba"]
 size = Vector2(819, 307)
@@ -78,6 +80,7 @@ color = Color(1, 0, 0, 1)
 [node name="Timers" type="Node" parent="." unique_id=2108689419]
 
 [node name="SpawnTimer" type="Timer" parent="Timers" unique_id=1475968178]
+wait_time = 0.1
 autostart = true
 
 [node name="Walls" type="StaticBody2D" parent="." unique_id=345947501]
@@ -95,6 +98,20 @@ shape = SubResource("RectangleShape2D_jjgbg")
 [node name="Bottom" type="CollisionShape2D" parent="Walls" unique_id=1340137395]
 position = Vector2(642, 690)
 shape = SubResource("RectangleShape2D_bo1nx")
+
+[node name="CoinContainer" type="Node" parent="." unique_id=2018112779]
+
+[node name="EffectsContainer" type="Node" parent="." unique_id=2007255158]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1425004732]
+process_mode = 3
+
+[node name="Hud" parent="CanvasLayer" unique_id=2042463003 instance=ExtResource("3_8gbba")]
+mouse_filter = 2
+
+[node name="GameOver" parent="CanvasLayer" unique_id=528653836 instance=ExtResource("2_bo1nx")]
+process_mode = 3
+visible = false
 
 [connection signal="body_entered" from="FountainPlaceholders/CanvasGroup/Water/Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="FountainPlaceholders/CanvasGroup/Water/Area2D" to="." method="_on_area_2d_body_exited"]
