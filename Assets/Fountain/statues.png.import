@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bggfoqdm5ngal"
-path="res://.godot/imported/water.png-5e43f109c81242552930472d9aed3462.ctex"
+uid="uid://dqu32xcqe0mbv"
+path="res://.godot/imported/statues.png-dceb8a786dc21f8e73666b07fbea3ac1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Placeholders/Fountain/water.png"
-dest_files=["res://.godot/imported/water.png-5e43f109c81242552930472d9aed3462.ctex"]
+source_file="res://Assets/Fountain/statues.png"
+dest_files=["res://.godot/imported/statues.png-dceb8a786dc21f8e73666b07fbea3ac1.ctex"]
 
 [params]
 

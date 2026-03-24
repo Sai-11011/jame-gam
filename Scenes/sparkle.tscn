@@ -34,6 +34,7 @@ scale_curve = SubResource("CurveTexture_m7k0b")
 color_ramp = SubResource("GradientTexture1D_m7k0b")
 
 [node name="Sparkle" type="GPUParticles2D" unique_id=222286477]
+z_index = 5
 emitting = false
 amount = 15
 texture = ExtResource("1_q3cwc")
