@@ -60,8 +60,6 @@ func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
 		
 	# 2. Existing score and water math...
 	PlayerData.score += 1
-	total_water_displacement -= clicked_coin.water_increase
-	update_water_level()
 	print("Coin collected! Score: ", PlayerData.score)
 	
 	get_tree().call_group("Coins", "wake_up")
@@ -93,7 +91,7 @@ func update_water_level() -> void:
 		print("GAME OVER! The fountain overflowed!")
 		Global.is_game_over = true
 		get_tree().paused = true
-		game_over_scene.show()
+		game_over_scene.set_final_stats()
 		spawn_timer.stop()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
