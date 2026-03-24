@@ -52,13 +52,11 @@ func spawn_coin() -> void:
 	coin_container.add_child(new_coin)
 
 func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
-	# 1. Spawn the Sparkle Juice!
 	if sparkle_scene:
 		var new_sparkle = sparkle_scene.instantiate()
 		new_sparkle.global_position = clicked_coin.global_position
 		effects_container.add_child(new_sparkle)
 		
-	# 2. Existing score and water math...
 	PlayerData.score += 1
 	print("Coin collected! Score: ", PlayerData.score)
 	
@@ -68,25 +66,25 @@ func update_water_level() -> void:
 	var target_height = total_water_displacement # how much the water height should be 
 	var target_y_pos = floor_y_position - target_height # from the current height 
 	
-	# 2. Stop the old animation if a new coin hits the water before it finishes
+	# Stop the old animation if a new coin hits the water before it finishes
 	if water_tween and water_tween.is_valid():
 		water_tween.kill()
 		
-	# 3. Create a fresh Tween
+	# Create a fresh Tween
 	water_tween = create_tween()
 	
-	# 4. Make the animation smooth like liquid (Sine curve eases in and out)
+	# Make the animation smooth like liquid (Sine curve eases in and out)
 	water_tween.set_trans(Tween.TRANS_SINE)
 	water_tween.set_ease(Tween.EASE_OUT)
 	
-	# 5. Tell the Tween to animate BOTH size and position at the same time
+	# Tell the Tween to animate BOTH size and position at the same time
 	water_tween.set_parallel(true)
 	
-	# 6. Run the animations! (The "0.3" is how many seconds it takes to rise)
+	# Run the animations! (The "0.3" is how many seconds it takes to rise)
 	water_tween.tween_property(water_rect, "size:y", target_height, 0.3)
 	water_tween.tween_property(water_rect, "position:y", target_y_pos, 0.3)
 	
-	# 7. Check for Game Over using the TARGET position, not the animated position
+	# Check for Game Over using the TARGET position, not the animated position
 	if target_y_pos <= 250.0:
 		print("GAME OVER! The fountain overflowed!")
 		Global.is_game_over = true
