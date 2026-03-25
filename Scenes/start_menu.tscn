@@ -15,9 +15,12 @@ grow_vertical = 2
 script = ExtResource("1_juhg0")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1814598429]
-layout_mode = 0
-offset_right = 1283.0
-offset_bottom = 730.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=15626682]
@@ -39,12 +42,12 @@ theme_override_constants/separation = 30
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8980392, 0.627451, 0.043137256, 1)
 theme_override_font_sizes/font_size = 80
-text = "Coins"
+text = "C   ins"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Sprite2D" type="Sprite2D" parent="VBoxContainer" unique_id=480210676]
-position = Vector2(105, 57.5)
+[node name="Sprite2D" type="Sprite2D" parent="VBoxContainer/Title" unique_id=480210676]
+position = Vector2(105.5, 56.5)
 scale = Vector2(0.36, 0.36)
 texture = ExtResource("3_m6uer")
 

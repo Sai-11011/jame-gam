@@ -20,7 +20,11 @@ var water_start_pos_y: float = 490.0
 var water_max_scale_y: float = 1.3
 var water_max_pos_y: float = 435.0
 
-# How much displacement it takes to reach Game Over
+# --- DIFFICULTY SETTINGS ---
+var base_spawn_time: float = 1.0 # The starting speed (1 coin per second)
+var min_spawn_time: float = 0.25 # The absolute fastest it can get (4 coins per second)
+var speedup_factor: float = 0.015 # How much time to shave off the timer every second
+
 # You might need to adjust this number through testing!
 var max_displacement_allowed: float = 50.0
 
@@ -40,15 +44,31 @@ func spawn_coin() -> void:
 	var roll = randf()
 	var random_key = "normal"
 	
-	if roll < 0.80: 
-		random_key = "normal"
-	elif roll < 0.95: 
-		random_key = "heavy"
-	else: 
-		random_key = "bouncy"
-		
-	var selected_coin_data = Global.COIN_TYPES[random_key]
+	# --- 1. COIN PROGRESSION LOGIC ---
+	var current_time = PlayerData.time
 	
+	if current_time < 15:
+		# PHASE 1 (0-15 seconds): 100% Bronze
+		random_key = "normal"
+		
+	elif current_time < 35:
+		# PHASE 2 (15-35 seconds): Introduce Silver (Bouncy)
+		if roll < 0.85:
+			random_key = "normal"
+		else:
+			random_key = "bouncy" # 15% chance for Silver
+			
+	else:
+		# PHASE 3 (35+ seconds): Introduce Gold (Heavy)
+		if roll < 0.70:
+			random_key = "normal"
+		elif roll < 0.85:
+			random_key = "bouncy"
+		else:
+			random_key = "heavy" # 15% chance for Gold
+			
+	# --- 2. SPAWN THE COIN ---
+	var selected_coin_data = Global.COIN_TYPES[random_key]
 	new_coin.setup(selected_coin_data)
 	
 	var toss_side = randi() % 2
@@ -61,14 +81,21 @@ func spawn_coin() -> void:
 
 	new_coin.clicked.connect(_on_coin_clicked)
 	coin_container.add_child(new_coin)
+	
+	# --- 3. DIFFICULTY SCALING LOGIC ---
+	var new_wait_time = base_spawn_time - (current_time * speedup_factor)
+	
+	# Use max() to ensure the timer never goes below your minimum limit!
+	spawn_timer.wait_time = max(new_wait_time, min_spawn_time)
 
 func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
+	AudioManager.play_coin_click()
 	if sparkle_scene:
 		var new_sparkle = sparkle_scene.instantiate()
 		new_sparkle.global_position = clicked_coin.global_position
 		effects_container.add_child(new_sparkle)
 		
-	PlayerData.score += 1
+	PlayerData.score += clicked_coin.score
 	print("Coin collected! Score: ", PlayerData.score)
 	
 	get_tree().call_group("Coins", "wake_up")
@@ -98,13 +125,16 @@ func update_water_level() -> void:
 	
 	# 6. Check for Game Over! (If the percentage hits 100%)
 	if fill_percent >= 1.0:
+		get_tree().call_group("Camera", "add_trauma", 0.8)
 		print("GAME OVER! The fountain overflowed!")
 		Global.is_game_over = true
 		get_tree().paused = true
 		game_over_scene.set_final_stats() 
 		spawn_timer.stop()
+		
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Coins") and not Global.is_game_over:
+		AudioManager.play_coin_drop()
 		# 1. Spawn the Splash Juice!
 		if splash_scene:
 			var new_splash = splash_scene.instantiate()
@@ -117,6 +147,7 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 		update_water_level()
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
-	if body.is_in_group("Coins"):
+	if body.is_in_group("Coins") and not Global.is_game_over:
+		
 		total_water_displacement -= body.water_increase
 		update_water_level()

@@ -6,17 +6,19 @@ extends RigidBody2D
 
 signal clicked(coin_node) 
 
+var has_slammed: bool = false # Locks the shake so it only happens ONCE
+var previous_velocity: Vector2 = Vector2.ZERO # Remembers how fast it was falling
 var water_increase: float = 0.0
 var coin_material: String = "" 
 var is_settled: bool = false 
-
+var score : int 
 var my_coin_data: Dictionary
 
 func setup(coin_data: Dictionary) -> void:
 	my_coin_data = coin_data
 	
 	mass = coin_data["weight"]
-	
+	score = coin_data["score"]
 	var phys_mat = PhysicsMaterial.new()
 	phys_mat.bounce = coin_data["bounce"]
 	phys_mat.friction = coin_data["friction"]
@@ -38,6 +40,16 @@ func _ready() -> void:
 	sprite.play("spin_" + coin_material) 
 
 func _physics_process(_delta: float) -> void:
+	if coin_material == "gold" and not has_slammed:
+		# If it was falling fast downwards, but suddenly lost its speed (hit a surface!)
+		if previous_velocity.y > 100.0 and linear_velocity.y < 20.0:
+			get_tree().call_group("Camera", "add_trauma", 0.4)
+			has_slammed = true # Lock it forever so it never shakes on pop!
+			
+	# Always save current speed for the next frame's math
+	previous_velocity = linear_velocity
+
+	# --- EXISTING ANIMATION LOGIC ---
 	if is_settled:
 		return
 		
@@ -47,9 +59,9 @@ func _physics_process(_delta: float) -> void:
 		
 		# Check which collision shape is active to know how it landed
 		if not spin_collision.disabled:
-			sprite.play("idle_" + "round_" + coin_material)
+			sprite.play("idle_round_" + coin_material)
 		else:
-			sprite.play("idle_" + "flat_" + coin_material)
+			sprite.play("idle_flat_" + coin_material)
 
 func wake_up() -> void:
 	sleeping = false

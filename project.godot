@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Global="*uid://cunbufwxkgiek"
 PlayerData="*uid://cxum1uvslgl0u"
+AudioManager="*uid://c875j2kkgagjl"
 
 [display]
 
@@ -30,6 +31,7 @@ mouse_cursor/custom_image="uid://c1t74v1uqfjr2"
 [global_group]
 
 Coins=""
+Camera=""
 
 [gui]
 

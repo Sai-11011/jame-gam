@@ -6,6 +6,9 @@
 [ext_resource type="Texture2D" uid="uid://dqu32xcqe0mbv" path="res://Assets/Fountain/statues.png" id="2_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://pksoanceu5r1" path="res://Scenes/hud.tscn" id="3_8gbba"]
 [ext_resource type="Texture2D" uid="uid://ck5t4jt7tyrml" path="res://Assets/Fountain/line.png" id="3_21xkr"]
+[ext_resource type="Texture2D" uid="uid://celbgu75u54ht" path="res://Assets/Fountain/light(1.1).png" id="5_ynf5e"]
+[ext_resource type="Script" uid="uid://flifelmkfobh" path="res://Scripts/point_light_2d.gd" id="6_344ge"]
+[ext_resource type="Script" uid="uid://dlty5evjorw3x" path="res://Scripts/camera_2d.gd" id="9_ynf5e"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
 atlas = ExtResource("2_21xkr")
@@ -79,9 +82,10 @@ metadata/_edit_group_ = true
 
 [node name="Water" type="AnimatedSprite2D" parent="Fountain" unique_id=48730719]
 position = Vector2(650, 490)
-scale = Vector2(1.1, 0.85)
+scale = Vector2(1.05, 0.85)
 sprite_frames = SubResource("SpriteFrames_6iyac")
 autoplay = "default"
+metadata/_edit_lock_ = true
 
 [node name="Area2D" type="Area2D" parent="Fountain/Water" unique_id=805171174]
 position = Vector2(-365.45456, -156.47061)
@@ -101,9 +105,21 @@ metadata/_edit_lock_ = true
 [node name="Statues" type="Sprite2D" parent="Fountain" unique_id=493462382]
 z_index = 5
 position = Vector2(650, 430)
-scale = Vector2(1.05, 1.1)
+scale = Vector2(1, 1.1)
 texture = ExtResource("2_jjvhh")
 metadata/_edit_lock_ = true
+
+[node name="PointLight2D" type="PointLight2D" parent="Fountain/Statues" unique_id=367461865]
+position = Vector2(450, -185)
+scale = Vector2(9, 9)
+texture = ExtResource("5_ynf5e")
+script = ExtResource("6_344ge")
+
+[node name="PointLight2D2" type="PointLight2D" parent="Fountain/Statues" unique_id=854196957]
+position = Vector2(-450, -185)
+scale = Vector2(9, 9)
+texture = ExtResource("5_ynf5e")
+script = ExtResource("6_344ge")
 
 [node name="Timers" type="Node" parent="." unique_id=2108689419]
 
@@ -118,8 +134,9 @@ metadata/_edit_lock_ = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Walls" unique_id=1450805043]
 modulate = Color(1, 1, 1, 0)
+position = Vector2(35, 0)
+scale = Vector2(0.95, 1)
 polygon = PackedVector2Array(208, 156, 208, 178, 197, 207, 200, 217, 201, 228, 199, 238, 190, 248, 185, 260, 172, 273, 171, 280, 172, 291, 174, 303, 186, 317, 205, 332, 226, 346, 229, 355, 221, 366, 215, 372, 177, 403, 172, 405, 162, 473, 154, 532, 153, 598, 160, 615, 169, 630, 189, 643, 205, 650, 227, 650, 1090, 649, 1103, 648, 1117, 639, 1132, 628, 1143, 606, 1146, 589, 1149, 564, 1144, 509, 1138, 466, 1130, 425, 1127, 407, 1094, 383, 1070, 357, 1074, 345, 1089, 335, 1108, 322, 1123, 308, 1130, 292, 1130, 279, 1117, 265, 1109, 254, 1109, 248, 1103, 242, 1099, 226, 1104, 208, 1100, 201, 1093, 182, 1090, 158, 1093, 155, 1187, 173, 1215, 218, 1206, 294, 1226, 341, 1214, 382, 1268, 674, 1194, 720, 38, 718, 85, 384, 74, 363, 72, 341, 96, 290, 86, 217, 103, 193, 111, 170, 163, 166)
-metadata/_edit_lock_ = true
 
 [node name="CoinContainer" type="Node" parent="." unique_id=2018112779]
 
@@ -136,6 +153,14 @@ metadata/_edit_lock_ = true
 process_mode = 3
 visible = false
 metadata/_edit_lock_ = true
+
+[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1638754305]
+color = Color(0.8, 0.8, 0.8, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=375586049 groups=["Camera"]]
+process_mode = 3
+position = Vector2(640, 360)
+script = ExtResource("9_ynf5e")
 
 [connection signal="body_entered" from="Fountain/Water/Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Fountain/Water/Area2D" to="." method="_on_area_2d_body_exited"]
