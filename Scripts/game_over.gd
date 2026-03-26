@@ -11,7 +11,9 @@ func set_final_stats()-> void:
 	show()
 
 func _on_restart_button_pressed() -> void:
+	AudioManager.play_button_click()
 	get_tree().reload_current_scene()
 
 func _on_menu_button_pressed() -> void:
+	AudioManager.play_button_click()
 	get_tree().change_scene_to_packed(start)

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c3jfch70qy105"
+path="res://.godot/imported/Agüita de jamaica.mp3-719f2ad38c541addfb4ecf1fd9bbc89b.mp3str"
+
+[deps]
+
+source_file="res://Music/music delicius/Agüita de jamaica.mp3"
+dest_files=["res://.godot/imported/Agüita de jamaica.mp3-719f2ad38c541addfb4ecf1fd9bbc89b.mp3str"]
+
+[params]
+
+loop=true
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

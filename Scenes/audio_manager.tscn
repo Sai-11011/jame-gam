@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://c875j2kkgagjl"]
+
+[ext_resource type="Script" uid="uid://cmjwty6yp07wm" path="res://Scripts/audio_manager.gd" id="1_vhwx7"]
+[ext_resource type="AudioStream" uid="uid://c0b0i1bep4one" path="res://AUDIO EFFECTS/Clicks wav format/Click 1.wav" id="2_bkjj7"]
+[ext_resource type="AudioStream" uid="uid://dcdv65vtq3c4t" path="res://AUDIO EFFECTS/Clicks wav format/Click 2.wav" id="3_dv115"]
+[ext_resource type="AudioStream" uid="uid://ciyxkydnkr22n" path="res://AUDIO EFFECTS/Clicks wav format/Click 3.wav" id="4_tesok"]
+[ext_resource type="AudioStream" uid="uid://briv2h405mbe2" path="res://AUDIO EFFECTS/Clicks wav format/Click 4.wav" id="5_s7ae5"]
+[ext_resource type="AudioStream" uid="uid://ccnk572qkajjq" path="res://AUDIO EFFECTS/Clicks wav format/Click 5.wav" id="6_w4e61"]
+[ext_resource type="AudioStream" uid="uid://dxaadhr774js" path="res://AUDIO EFFECTS/Clicks wav format/Click 6.wav" id="7_uebr4"]
+[ext_resource type="AudioStream" uid="uid://bjfd3q3xd60ud" path="res://AUDIO EFFECTS/Clicks wav format/Click 7.wav" id="8_ype7x"]
+[ext_resource type="AudioStream" uid="uid://c3s28h2ymehwe" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 1.wav" id="9_7oln7"]
+[ext_resource type="AudioStream" uid="uid://q8shnobsfjee" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 2.wav" id="10_3rm37"]
+[ext_resource type="AudioStream" uid="uid://ckbumjkxiwbwm" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 3.wav" id="11_ufe2k"]
+[ext_resource type="AudioStream" uid="uid://b3texam5lrqay" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 4.wav" id="12_uj3df"]
+[ext_resource type="AudioStream" uid="uid://vbm5m3e35k8g" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 5.wav" id="13_jdih1"]
+[ext_resource type="AudioStream" uid="uid://b1ppt5dcqagef" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 6.wav" id="14_tljh5"]
+[ext_resource type="AudioStream" uid="uid://cctai3ooad5en" path="res://AUDIO EFFECTS/Impacts Wav format/Impact 7.wav" id="15_2gmef"]
+[ext_resource type="AudioStream" uid="uid://c3jfch70qy105" path="res://Music/music delicius/Agüita de jamaica.mp3" id="16_bkjj7"]
+
+[node name="AudioManager" type="Node" unique_id=1869297544]
+process_mode = 3
+script = ExtResource("1_vhwx7")
+
+[node name="CoinClick" type="Node" parent="." unique_id=668300790]
+
+[node name="Click1" type="AudioStreamPlayer" parent="CoinClick" unique_id=619761118]
+stream = ExtResource("2_bkjj7")
+
+[node name="Click2" type="AudioStreamPlayer" parent="CoinClick" unique_id=217794118]
+stream = ExtResource("3_dv115")
+
+[node name="Click3" type="AudioStreamPlayer" parent="CoinClick" unique_id=1159288071]
+stream = ExtResource("4_tesok")
+
+[node name="Click4" type="AudioStreamPlayer" parent="CoinClick" unique_id=232315770]
+stream = ExtResource("5_s7ae5")
+
+[node name="Click5" type="AudioStreamPlayer" parent="CoinClick" unique_id=2179650]
+stream = ExtResource("6_w4e61")
+
+[node name="Click6" type="AudioStreamPlayer" parent="CoinClick" unique_id=730509274]
+stream = ExtResource("7_uebr4")
+
+[node name="Click7" type="AudioStreamPlayer" parent="CoinClick" unique_id=1601936650]
+stream = ExtResource("8_ype7x")
+
+[node name="CoinDrop" type="Node" parent="." unique_id=1300052986]
+
+[node name="Impact1" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1556937796]
+stream = ExtResource("9_7oln7")
+
+[node name="Impact2" type="AudioStreamPlayer" parent="CoinDrop" unique_id=626594720]
+stream = ExtResource("10_3rm37")
+
+[node name="Impact3" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1157446063]
+stream = ExtResource("11_ufe2k")
+
+[node name="Impact4" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1608695293]
+stream = ExtResource("12_uj3df")
+
+[node name="Impact5" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1824156948]
+stream = ExtResource("13_jdih1")
+
+[node name="Impact6" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1222404900]
+stream = ExtResource("14_tljh5")
+
+[node name="Impact7" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1547785910]
+stream = ExtResource("15_2gmef")
+
+[node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1423256878]
+stream = ExtResource("16_bkjj7")
+autoplay = true
