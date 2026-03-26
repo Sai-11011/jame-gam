@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://pksoanceu5r1"]
 
 [ext_resource type="Script" uid="uid://w8cdi614kokg" path="res://Scripts/hud.gd" id="1_e0onf"]
+[ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_fccik"]
 
 [node name="Hud" type="Control" unique_id=2042463003]
 layout_mode = 3
@@ -31,8 +32,18 @@ alignment = 1
 
 [node name="Timer" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1115327419]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Timer : "
+
+[node name="Button" type="Button" parent="MarginContainer/HBoxContainer" unique_id=726173046]
+layout_mode = 2
+theme = ExtResource("2_fccik")
+theme_override_font_sizes/font_size = 24
+text = "Pause"
 
 [node name="Score" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1456149857]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Score : "
+
+[connection signal="pressed" from="MarginContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]

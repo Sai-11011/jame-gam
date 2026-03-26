@@ -8,6 +8,7 @@ extends Node2D
 @onready var coin_container: Node = $CoinContainer
 @onready var effects_container: Node = $EffectsContainer
 @onready var game_over_scene: Control = $CanvasLayer/GameOver 
+@onready var pause_menu: Control = $CanvasLayer/PauseMenu
 
 var water_tween: Tween
 var floor_y_position: float = 360.0
@@ -32,6 +33,11 @@ func _ready() -> void:
 	Global.is_game_over = false
 	get_tree().paused = false
 	PlayerData.reset_stats()
+
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		get_tree().paused = true
+		pause_menu.show()
 
 func _on_spawn_timer_timeout() -> void:
 	spawn_coin()
@@ -83,22 +89,57 @@ func spawn_coin() -> void:
 	coin_container.add_child(new_coin)
 	
 	# --- 3. DIFFICULTY SCALING LOGIC ---
-	var new_wait_time = base_spawn_time - (current_time * speedup_factor)
+	var new_wait_time = base_spawn_time
+	
+	# Only start speeding up the drops AFTER 35 seconds
+	if current_time > 35:
+		# Calculate how many seconds have passed SINCE the 35-second mark
+		var active_speedup_time = current_time - 35
+		new_wait_time = base_spawn_time - (active_speedup_time * speedup_factor)
 	
 	# Use max() to ensure the timer never goes below your minimum limit!
 	spawn_timer.wait_time = max(new_wait_time, min_spawn_time)
 
 func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
+	# 1. Play the click sound!
 	AudioManager.play_coin_click()
+	
+	# 2. Spawn the Sparkles!
 	if sparkle_scene:
 		var new_sparkle = sparkle_scene.instantiate()
 		new_sparkle.global_position = clicked_coin.global_position
 		effects_container.add_child(new_sparkle)
 		
+	# 3. Add the specific coin's score! (Bronze +1, Silver +3, Gold +5)
 	PlayerData.score += clicked_coin.score
-	print("Coin collected! Score: ", PlayerData.score)
 	
+	# 4. Wake up the pile so gravity takes over
 	get_tree().call_group("Coins", "wake_up")
+	
+	# --- 5. WISH SYSTEM LOGIC ---
+	if Global.active_wish == "bomb":
+		Global.active_wish = "" # Reset the wish so it only happens once!
+		
+		# Find all coins and pop the ones close to the click
+		var all_coins = get_tree().get_nodes_in_group("Coins")
+		for coin in all_coins:
+			# If the coin is within 180 pixels of the clicked coin, blow it up!
+			if coin.global_position.distance_to(clicked_coin.global_position) < 180.0:
+				if is_instance_valid(coin) and coin != clicked_coin:
+					coin.pop() # This triggers a glorious chain of sparkles and scores!
+					
+	elif Global.active_wish == "chain":
+		Global.active_wish = "" # Reset the wish
+		
+		var all_coins = get_tree().get_nodes_in_group("Coins")
+		all_coins.shuffle() # Mix up the array to get random targets
+		
+		# Pop up to 4 random coins currently on screen
+		var pops_left = 4
+		for coin in all_coins:
+			if pops_left > 0 and is_instance_valid(coin) and coin != clicked_coin:
+				coin.pop()
+				pops_left -= 1
 
 func update_water_level() -> void:
 	# 1. Calculate how full the fountain is (from 0.0 to 1.0)
@@ -151,3 +192,16 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 		
 		total_water_displacement -= body.water_increase
 		update_water_level()
+
+# --- WISH SYSTEM LOGIC ---
+
+# The Pause Menu calls this when "Breathing Room" is purchased
+func freeze_time() -> void:
+	spawn_timer.stop() # Stop the coins falling!
+	
+	# Wait exactly 5 seconds using a quick built-in timer
+	await get_tree().create_timer(5.0).timeout 
+	
+	# Resume the chaos!
+	if not Global.is_game_over:
+		spawn_timer.start()

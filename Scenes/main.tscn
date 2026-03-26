@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://celbgu75u54ht" path="res://Assets/Fountain/light(1.1).png" id="5_ynf5e"]
 [ext_resource type="Script" uid="uid://flifelmkfobh" path="res://Scripts/point_light_2d.gd" id="6_344ge"]
 [ext_resource type="Script" uid="uid://dlty5evjorw3x" path="res://Scripts/camera_2d.gd" id="9_ynf5e"]
+[ext_resource type="PackedScene" uid="uid://d2tvabsqdrra" path="res://Scenes/pause_menu.tscn" id="10_hptm8"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
 atlas = ExtResource("2_21xkr")
@@ -70,7 +71,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8gbba"]
 size = Vector2(1004, 314)
 
-[node name="Main" type="Node2D" unique_id=2020920455]
+[node name="Main" type="Node2D" unique_id=2020920455 groups=["Main"]]
 script = ExtResource("1_jjgbg")
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=1954420403]
@@ -145,14 +146,19 @@ polygon = PackedVector2Array(208, 156, 208, 178, 197, 207, 200, 217, 201, 228, 1
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1425004732]
 process_mode = 3
 
-[node name="Hud" parent="CanvasLayer" unique_id=2042463003 instance=ExtResource("3_8gbba")]
+[node name="Hud" parent="CanvasLayer" unique_id=2042463003 node_paths=PackedStringArray("pause") instance=ExtResource("3_8gbba")]
 mouse_filter = 2
+pause = NodePath("../PauseMenu")
 metadata/_edit_lock_ = true
 
 [node name="GameOver" parent="CanvasLayer" unique_id=528653836 instance=ExtResource("2_bo1nx")]
 process_mode = 3
 visible = false
 metadata/_edit_lock_ = true
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=341410418 instance=ExtResource("10_hptm8")]
+process_mode = 3
+visible = false
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1638754305]
 color = Color(0.8, 0.8, 0.8, 1)

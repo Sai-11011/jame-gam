@@ -7,7 +7,7 @@ extends Control
 func set_final_stats()-> void:
 	PlayerData.timer.stop()
 	timer_label.text = "Time : " + PlayerData.get_formatted_time()
-	score_label.text = "Score : " + str(PlayerData.score)
+	score_label.text = "Favor : " + str(PlayerData.score)
 	show()
 
 func _on_restart_button_pressed() -> void:

@@ -32,6 +32,7 @@ mouse_cursor/custom_image="uid://c1t74v1uqfjr2"
 
 Coins=""
 Camera=""
+Main=""
 
 [gui]
 
@@ -52,4 +53,6 @@ common/physics_ticks_per_second=120
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 anti_aliasing/quality/msaa_2d=1

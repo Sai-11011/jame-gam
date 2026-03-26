@@ -302,7 +302,7 @@ height = 50.0
 radius = 23.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_81h6x"]
-radius = 30.0
+radius = 50.0
 
 [node name="Coin" type="RigidBody2D" unique_id=1221397100 groups=["Coins"]]
 rotation = 1.5707964

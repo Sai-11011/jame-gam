@@ -67,16 +67,18 @@ func wake_up() -> void:
 	sleeping = false
 	is_settled = false 
 
-# --- NEW: Fat Finger Hitbox Logic ---
 func _on_click_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		
-		# CRITICAL: This stops the click from piercing through to overlapping coins!
+	# 1. Check if it's a left mouse click (for PC)
+	var is_mouse_click = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+	
+	# 2. Check if it's a direct physical screen tap (for Mobile)
+	var is_screen_touch = event is InputEventScreenTouch and event.pressed
+	
+	# 3. If EITHER of those things happen, pop the coin!
+	if is_mouse_click or is_screen_touch:
 		get_viewport().set_input_as_handled()
-		
 		pop()
 
-# --- NEW: Reusable Pop Logic ---
 func pop() -> void:
 	emit_signal("clicked", self) 
 	get_tree().call_group("Coins", "wake_up")
