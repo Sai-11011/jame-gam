@@ -299,7 +299,10 @@ radius = 8.0
 height = 50.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_ffmqm"]
-radius = 22.090721
+radius = 23.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_81h6x"]
+radius = 30.0
 
 [node name="Coin" type="RigidBody2D" unique_id=1221397100 groups=["Coins"]]
 rotation = 1.5707964
@@ -321,3 +324,10 @@ shape = SubResource("CapsuleShape2D_qtgto")
 
 [node name="CollisionSpin" type="CollisionShape2D" parent="." unique_id=1863835182]
 shape = SubResource("CircleShape2D_ffmqm")
+
+[node name="ClickArea" type="Area2D" parent="." unique_id=396400977]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea" unique_id=271597536]
+shape = SubResource("CircleShape2D_81h6x")
+
+[connection signal="input_event" from="ClickArea" to="." method="_on_click_area_input_event"]

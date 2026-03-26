@@ -67,8 +67,17 @@ func wake_up() -> void:
 	sleeping = false
 	is_settled = false 
 
-func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+# --- NEW: Fat Finger Hitbox Logic ---
+func _on_click_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		emit_signal("clicked", self) 
-		get_tree().call_group("Coins", "wake_up")
-		queue_free()
+		
+		# CRITICAL: This stops the click from piercing through to overlapping coins!
+		get_viewport().set_input_as_handled()
+		
+		pop()
+
+# --- NEW: Reusable Pop Logic ---
+func pop() -> void:
+	emit_signal("clicked", self) 
+	get_tree().call_group("Coins", "wake_up")
+	queue_free()
