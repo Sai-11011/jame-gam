@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dnhqs5ekifleb" path="res://Scripts/game_over.gd" id="1_ojehl"]
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_8fo1c"]
+[ext_resource type="Texture2D" uid="uid://beut0dyhjwi16" path="res://Assets/UI/ui_bg.png" id="2_ek8ke"]
 
 [node name="GameOver" type="Control" unique_id=528653836]
 layout_mode = 3
@@ -12,14 +13,9 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ojehl")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1919980606]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.1254902, 0.1254902, 0.1254902, 0.1254902)
+[node name="ColorRect" type="Sprite2D" parent="." unique_id=1160023875]
+position = Vector2(640, 360)
+texture = ExtResource("2_ek8ke")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=361298229]
 layout_mode = 1

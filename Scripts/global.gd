@@ -9,6 +9,7 @@ const SCENES :Dictionary = {
 	"splash":"uid://chi47vo2opelm",
 	"start":"uid://b3k3jajoe6tme",
 	"game_over":"uid://cbfhggauibbmm",
+	"settings":"uid://b41gctw0eapfp"
 }
 
 const WISHES : Dictionary = {
@@ -22,25 +23,25 @@ const WISHES : Dictionary = {
 		"id": "bronze_banish",
 		"name": "Bronze Banish",
 		"desc": "Instantly pops EVERY Bronze coin on the screen.",
-		"cost": 50 # Clears the bulk clutter, leaves the high-value coins behind.
+		"cost": 60 # Clears the bulk clutter, leaves the high-value coins behind.
 	},
 	"bomb": {
 		"id": "bomb",
 		"name": "Coin Bomb",
 		"desc": "Your next click creates a blast radius, popping nearby coins.",
-		"cost": 75 # Great for clearing out a specific heavy pile-up.
+		"cost": 90 # Great for clearing out a specific heavy pile-up.
 	},
 	"time_freeze": {
 		"id": "time_freeze",
 		"name": "Breathing Room",
 		"desc": "Stops the coin spawner from dropping anything for 5 seconds.",
-		"cost": 90 # Pure survival utility. Gives them time to click normally.
+		"cost": 100 # Pure survival utility. Gives them time to click normally.
 	},
 	"wipe": {
 		"id": "wipe",
 		"name": "Fountain Sweep",
 		"desc": "Instantly pops EVERY coin on the screen.",
-		"cost": 150 # The ultimate panic button. Massive net loss of Favor, but saves the run.
+		"cost": 300 # The ultimate panic button. Massive net loss of Favor, but saves the run.
 	}
 }
 
@@ -63,7 +64,7 @@ const COIN_TYPES :Dictionary = {
 		"weight": 3.0,           # High mass to pin other coins
 		"bounce": 0.0,           # Zero bounce so it slams down
 		"friction": 0.8,         # High friction so it doesn't slide easily
-		"water_increase": 2.5,   # Displaces much more water due to size
+		"water_increase": 1.5,   # Displaces much more water due to size
 	},
 	"bouncy": {
 		"name": "bouncy",
@@ -72,6 +73,6 @@ const COIN_TYPES :Dictionary = {
 		"weight": 0.5,           # Low mass, easily knocked around
 		"bounce": 0.9,           # Extremely high bounce for chaos
 		"friction": 0.2,         # Low friction to keep it moving
-		"water_increase": 0.5,   # Displaces very little water
+		"water_increase": 0.8,   # Displaces very little water
 	}
 }

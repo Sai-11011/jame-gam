@@ -4,6 +4,12 @@ extends Control
 @onready var timer_label := $MarginContainer/VBoxContainer/HBoxContainer/Time
 @onready var score_label := $MarginContainer/VBoxContainer/HBoxContainer/Score
 
+func _ready() -> void:
+	if PlayerData.time > PlayerData.best_time:
+			PlayerData.best_time = PlayerData.time
+			PlayerData.save_game() 
+			print("New High Score Saved!")
+
 func set_final_stats()-> void:
 	PlayerData.timer.stop()
 	timer_label.text = "Time : " + PlayerData.get_formatted_time()
