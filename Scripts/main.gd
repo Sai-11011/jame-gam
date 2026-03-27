@@ -9,7 +9,10 @@ extends Node2D
 @onready var effects_container: Node = $EffectsContainer
 @onready var game_over_scene: Control = $CanvasLayer/GameOver 
 @onready var pause_menu: Control = $CanvasLayer/PauseMenu
+@onready var percent_label : Label = $CanvasLayer/Hud/FillLabel
+@onready var laser_line := $Fountain/Line
 
+var danger_tween: Tween
 var water_tween: Tween
 var floor_y_position: float = 360.0
 var total_water_displacement: float = 0.0 
@@ -142,37 +145,53 @@ func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
 				pops_left -= 1
 
 func update_water_level() -> void:
-	# 1. Calculate how full the fountain is (from 0.0 to 1.0)
-	# clamp ensures the percentage never goes below 0% or above 100%
 	var fill_percent = clamp(total_water_displacement / max_displacement_allowed, 0.0, 1.0)
-	print(fill_percent)
-	# 2. Use lerp to find the exact target scale and position based on that percentage
+	
+	# --- 1. UPDATE PERCENTAGE LABEL ---
+	if percent_label:
+		# Multiplies 0.50 by 100 to display "50%"
+		percent_label.text = "Water Level: %d%%" % (fill_percent * 100)
+		
+	# --- 2. DANGER PULSE INDICATOR ---
+	if fill_percent >= 0.85: 
+		# If it's 85% full and not already animating, start the pulse
+		if not danger_tween or not danger_tween.is_valid():
+			laser_line.modulate = Color(1, 0, 0, 1) # Tint the laser line red
+			danger_tween = create_tween().set_loops().set_trans(Tween.TRANS_SINE) # Loops infinitely
+			# Pulse from White to Red
+			danger_tween.tween_property(laser_line, "modulate", Color(1, 0, 0, 1), 0.2)
+			# Pulse from Red back to White
+			danger_tween.tween_property(laser_line, "modulate", Color(1, 1, 1, 1), 0.2)
+	else:
+		# If water drops below 85%, kill the animation and reset the line
+		if danger_tween and danger_tween.is_valid():
+			danger_tween.kill()
+		laser_line.scale.y = 1.0
+		laser_line.modulate = Color(1, 1, 1, 1) # Reset to normal color
+
+	# --- 3. EXISTING WATER MATH ---
 	var target_scale_y = lerp(water_start_scale_y, water_max_scale_y, fill_percent)
 	var target_pos_y = lerp(water_start_pos_y, water_max_pos_y, fill_percent)
 	
-	# 3. Stop the old animation
 	if water_tween and water_tween.is_valid():
 		water_tween.kill()
 		
-	# 4. Create a fresh Tween
 	water_tween = create_tween()
 	water_tween.set_trans(Tween.TRANS_SINE)
 	water_tween.set_ease(Tween.EASE_OUT)
 	water_tween.set_parallel(true)
 	
-	# 5. Tween the Sprite2D's scale and position
 	water_tween.tween_property(water_sprite, "scale:y", target_scale_y, 0.3)
 	water_tween.tween_property(water_sprite, "position:y", target_pos_y, 0.3)
 	
-	# 6. Check for Game Over! (If the percentage hits 100%)
 	if fill_percent >= 1.0:
-		get_tree().call_group("Camera", "add_trauma", 0.8)
 		print("GAME OVER! The fountain overflowed!")
 		Global.is_game_over = true
+		get_tree().call_group("Camera", "add_trauma", 0.8)
 		get_tree().paused = true
 		game_over_scene.set_final_stats() 
 		spawn_timer.stop()
-		
+
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Coins") and not Global.is_game_over:
 		AudioManager.play_coin_drop()
@@ -200,7 +219,7 @@ func freeze_time() -> void:
 	spawn_timer.stop() # Stop the coins falling!
 	
 	# Wait exactly 5 seconds using a quick built-in timer
-	await get_tree().create_timer(5.0).timeout 
+	await get_tree().create_timer(6.0).timeout 
 	
 	# Resume the chaos!
 	if not Global.is_game_over:
