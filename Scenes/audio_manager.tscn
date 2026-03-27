@@ -25,48 +25,63 @@ script = ExtResource("1_vhwx7")
 
 [node name="Click1" type="AudioStreamPlayer" parent="CoinClick" unique_id=619761118]
 stream = ExtResource("2_bkjj7")
+bus = &"SFX"
 
 [node name="Click2" type="AudioStreamPlayer" parent="CoinClick" unique_id=217794118]
 stream = ExtResource("3_dv115")
+bus = &"SFX"
 
 [node name="Click3" type="AudioStreamPlayer" parent="CoinClick" unique_id=1159288071]
 stream = ExtResource("4_tesok")
+bus = &"SFX"
 
 [node name="Click4" type="AudioStreamPlayer" parent="CoinClick" unique_id=232315770]
 stream = ExtResource("5_s7ae5")
+bus = &"SFX"
 
 [node name="Click5" type="AudioStreamPlayer" parent="CoinClick" unique_id=2179650]
 stream = ExtResource("6_w4e61")
+bus = &"SFX"
 
 [node name="Click6" type="AudioStreamPlayer" parent="CoinClick" unique_id=730509274]
 stream = ExtResource("7_uebr4")
+bus = &"SFX"
 
 [node name="Click7" type="AudioStreamPlayer" parent="CoinClick" unique_id=1601936650]
 stream = ExtResource("8_ype7x")
+bus = &"SFX"
 
 [node name="CoinDrop" type="Node" parent="." unique_id=1300052986]
 
 [node name="Impact1" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1556937796]
 stream = ExtResource("9_7oln7")
+bus = &"SFX"
 
 [node name="Impact2" type="AudioStreamPlayer" parent="CoinDrop" unique_id=626594720]
 stream = ExtResource("10_3rm37")
+bus = &"SFX"
 
 [node name="Impact3" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1157446063]
 stream = ExtResource("11_ufe2k")
+bus = &"SFX"
 
 [node name="Impact4" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1608695293]
 stream = ExtResource("12_uj3df")
+bus = &"SFX"
 
 [node name="Impact5" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1824156948]
 stream = ExtResource("13_jdih1")
+bus = &"SFX"
 
 [node name="Impact6" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1222404900]
 stream = ExtResource("14_tljh5")
+bus = &"SFX"
 
 [node name="Impact7" type="AudioStreamPlayer" parent="CoinDrop" unique_id=1547785910]
 stream = ExtResource("15_2gmef")
+bus = &"SFX"
 
 [node name="BGM" type="AudioStreamPlayer" parent="." unique_id=1423256878]
 stream = ExtResource("16_bkjj7")
 autoplay = true
+bus = &"Music"

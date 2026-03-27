@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bwekoct4i4ry6" path="res://Scripts/pause_menu.gd" id="1_emv3i"]
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_k0w1u"]
+[ext_resource type="Texture2D" uid="uid://beut0dyhjwi16" path="res://Assets/UI/ui_bg.png" id="3_1och7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0w1u"]
-bg_color = Color(0.14406255, 0.14406255, 0.14406249, 1)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bpi0q"]
+texture = ExtResource("3_1och7")
 
 [node name="PauseMenu" type="Control" unique_id=341410418]
 layout_mode = 3
@@ -79,7 +80,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_k0w1u")
+theme_override_styles/panel = SubResource("StyleBoxTexture_bpi0q")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="WishPanel" unique_id=861635373]
 layout_mode = 1

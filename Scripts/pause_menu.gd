@@ -102,4 +102,5 @@ func _on_confirm_button_pressed() -> void:
 
 
 func _on_close_button_pressed() -> void:
+	AudioManager.play_button_click()
 	wish_panel.hide()

@@ -1,65 +1,24 @@
 [gd_scene format=3 uid="uid://dq185ba7g7220"]
 
 [ext_resource type="Script" uid="uid://bb8mr16xnyrry" path="res://Scripts/main.gd" id="1_jjgbg"]
-[ext_resource type="Texture2D" uid="uid://borobwmcg8kfg" path="res://Assets/Fountain/water anim.png" id="2_21xkr"]
 [ext_resource type="PackedScene" uid="uid://cbfhggauibbmm" path="res://Scenes/game_over.tscn" id="2_bo1nx"]
+[ext_resource type="Texture2D" uid="uid://c5u6r8j8w45l1" path="res://Assets/Bg/BackGround.png" id="2_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://dqu32xcqe0mbv" path="res://Assets/Fountain/statues.png" id="2_jjvhh"]
 [ext_resource type="PackedScene" uid="uid://pksoanceu5r1" path="res://Scenes/hud.tscn" id="3_8gbba"]
 [ext_resource type="Texture2D" uid="uid://ck5t4jt7tyrml" path="res://Assets/Fountain/line.png" id="3_21xkr"]
+[ext_resource type="Texture2D" uid="uid://bggfoqdm5ngal" path="res://Assets/Fountain/water.png" id="3_d1ilt"]
 [ext_resource type="Texture2D" uid="uid://celbgu75u54ht" path="res://Assets/Fountain/light(1.1).png" id="5_ynf5e"]
 [ext_resource type="Script" uid="uid://flifelmkfobh" path="res://Scripts/point_light_2d.gd" id="6_344ge"]
 [ext_resource type="Script" uid="uid://dlty5evjorw3x" path="res://Scripts/camera_2d.gd" id="9_ynf5e"]
 [ext_resource type="PackedScene" uid="uid://d2tvabsqdrra" path="res://Scenes/pause_menu.tscn" id="10_hptm8"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_21xkr"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(0, 0, 996, 400)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6bp64"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(996, 0, 996, 400)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_344ge"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(1992, 0, 996, 400)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ynf5e"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(2988, 0, 996, 400)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_hptm8"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(3984, 0, 996, 400)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_d1ilt"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(4980, 0, 996, 400)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_6iyac"]
-atlas = ExtResource("2_21xkr")
-region = Rect2(5976, 0, 996, 400)
+atlas = ExtResource("3_d1ilt")
+region = Rect2(0, 0, 1100, 500)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_6iyac"]
 animations = [{
 "frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_21xkr")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6bp64")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_344ge")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ynf5e")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_hptm8")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_d1ilt")
-}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_6iyac")
 }],
@@ -76,6 +35,7 @@ script = ExtResource("1_jjgbg")
 
 [node name="Bg" type="Sprite2D" parent="." unique_id=1954420403]
 position = Vector2(640, 360)
+texture = ExtResource("2_d1ilt")
 
 [node name="Fountain" type="Node2D" parent="." unique_id=146423570]
 metadata/_edit_lock_ = true

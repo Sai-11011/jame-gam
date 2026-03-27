@@ -23,6 +23,7 @@ func _process(_delta: float) -> void:
 		score.text = "Favor : "+ str(PlayerData.score)
 
 func _on_button_pressed() -> void:
+	AudioManager.play_button_click()
 	if pause != null :
 		get_tree().paused = true
 		pause.show()
