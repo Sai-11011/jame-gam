@@ -1,8 +1,9 @@
 extends RigidBody2D
 
-@onready var sprite = $AnimatedSprite2D
-@onready var spin_collision = $CollisionSpin
-@onready var flat_collision = $CollisionFlat
+@onready var sprite := $AnimatedSprite2D
+@onready var spin_collision := $CollisionSpin
+@onready var flat_collision := $CollisionFlat
+@onready var click_area := $ClickArea
 
 signal clicked(coin_node) 
 
@@ -80,6 +81,16 @@ func _on_click_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: 
 		pop()
 
 func pop() -> void:
+	$ClickArea.input_pickable = false
+	
+	# 2. Emit your signals immediately so score and sparkles still happen instantly
 	emit_signal("clicked", self) 
 	get_tree().call_group("Coins", "wake_up")
+	
+	# 3. Create the micro-animation (shrinks to 0 scale over 0.15 seconds)
+	var tween = create_tween()
+	tween.tween_property(sprite, "scale", Vector2.ZERO, 0.15).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_IN)
+	
+	# 4. Wait for the tween to finish, then safely delete the coin
+	await tween.finished
 	queue_free()

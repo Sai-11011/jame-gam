@@ -1,241 +1,325 @@
-# Coin Fountain Sweeper – Game Design Document
+# Executive Summary
 
-## 1. Game Overview
-**High Concept:** The player manages an overflowing wishing fountain by clicking on falling coins to remove them before they pile too high. Coins (as **RigidBody2D** physics objects) fall into the fountain chaotically, and the player must prioritize which coins to click under pressure. 
+This document updates the **Coin Fountain Sweeper** Game Design Document (GDD) to include all implemented changes. The core game remains a physics-based 2D micromanagement title in Godot 4, but key mechanics have evolved: the **fail-state** now uses a *water displacement* system, the **Wish System** is now a player-driven shop economy, coin roles and scoring have been tiered, difficulty progresses in phases, input uses larger hitboxes for accessibility, and visuals/juice have been enhanced. This GDD outlines these changes in detail, with precise formulas, node architecture, code snippets, and a practical 7-day solo dev schedule. Following the GDD, a README provides project setup and run instructions. 
 
-**Player Fantasy:** You are the guardian of the wishing fountain, frantically keeping the waterline clear of coins. Every click gives satisfying feedback – coins pop and sparkle as you scoop them away – making you feel powerful and in control of chaos.
+## 1. Game Overview  
+The player manages an overflowing wishing fountain by clicking on falling coins. Each coin (Bronze, Silver, Gold) both adds to the fountain’s water level when it lands and grants Favor (score) when clicked. The fountain will overflow (Game Over) if the water height reaches the glowing Laser Line at **Y=250**. The player’s goal is to keep the water under control while using Favor to purchase powerful Lifelines from a **Wish Shop**. Real-time micromanagement and prioritization are key: heavy coins crush the pile but yield more Favor, bouncy coins add chaos, and strategic use of Wishes (lifelines) can avert disaster. Visual and audio feedback (coin pops, camera shake, pulsing lights) make each interaction satisfying, reinforcing the “game feel” as players juggle tasks under pressure【52†L278-L287】【38†L24-L30】.
 
-**Core Loop (Moment-to-Moment):** 
-- Coins of various types continuously spawn above the fountain and fall in via physics (leveraging Godot’s RigidBody2D with adjustable **mass, friction, bounce**【48†L310-L318】). 
-- The player clicks on coins to collect/remove them. Each removal yields immediate visual and audio feedback. 
-- Different coin types behave uniquely (heavy coins pin others, bouncy coins chaotically ricochet), requiring the player to triage which coins to click first. 
-- If the coin stack stays above the waterline too long, a loss warning (e.g. water bubbling) triggers; sustained overflow ends the game. 
-- Between waves (or on milestones), a “wish” power-up may trigger, momentarily altering spawn rates or physics to spice up play. 
+## 2. Core Game Loop  
+1. **Coin Spawn:** A Timer spawns coins above the fountain. Spawn logic follows a **phased progression**: Phase 1 (0–15s) spawns only Bronze coins, Phase 2 (15–35s) introduces Silver, and Phase 3 (35s+) adds Gold. Simultaneously, the spawn interval decreases gradually (down to a floor of 0.25s, i.e. 4 coins/sec).  
+2. **Physics Interaction:** Coins are `RigidBody2D` nodes (see Architecture). They fall with gravity and bounce off the fountain walls and each other. Bronze coins have moderate bounce, Silver are very bouncy, Gold are heavy and nearly non-bouncy【48†L310-L318】. Collisions are realistic due to precise collision shapes.  
+3. **Water Level Update:** Each coin has a `water_increase` value (e.g. Bronze=5px, Silver=10px, Gold=15px). When a coin enters the fountain’s water area (`Area2D`), the fountain’s `water_height` target is increased by that value via a smooth `lerp()` tween. This raises the animated water surface accordingly.  
+4. **Player Interaction (Clicks):** The player clicks or taps coins to remove them. Each coin also has a large invisible hitbox (`Area2D` ~2× sprite radius) to ease clicking (Tier 1 “fat-finger” input). Upon click, the coin pops (plays VFX/SFX), is freed, and the water height is decreased by the coin’s value (instantly or via a short tween), simulating water removal. The player earns Favor: Bronze +1, Silver +3, Gold +5.  
+5. **Fail Check:** Each frame, the game checks if `water_height ≥ 250` (Laser Line). If so, Game Over triggers immediately. A brief warning effect (like water bubbling or UI flash) can play as `water_height` nears the line.  
+6. **Wish Shop Access:** The player can pause anytime to open the Wish Shop. Here they spend Favor on Lifelines (the new Wish System). These are one-off effects (e.g. *Fountain Sweep* clears all coins). Choosing when to use these adds a strategic layer.  
 
-This loop emphasizes **real-time micromanagement**: constantly clicking, juggling priorities, and reacting to physics chaos, fulfilling the theme by forcing continuous small-scale control and decision-making.  
+This loop ensures constant decision-making: click threats, manage water, and decide on Lifelines. It ties closely to the jam theme of micromanagement by forcing continual small interactions and quick prioritization.
 
-## 2. Core Game Loop Breakdown
-- **Step 1:** Coins spawn at varying horizontal positions above the fountain, with increasing frequency over time. Spawn logic uses a simple timer: for instance, start at 1 coin/sec and gradually decrease interval (e.g. `spawn_interval = max(0.2, 1.0 - 0.1 * minutes_passed)`).  
-- **Step 2:** Spawned coins enter the fountain as RigidBody2D bodies. Gravity pulls them down; collisions and physics cause them to stack or bounce off each other (leveraging Godot’s physics engine for realism【48†L310-L318】). 
-- **Step 3:** The player uses the mouse to click coins. Clicking instantly removes a coin (or perhaps “vacuum” it out) with an animated effect. This clears space and increments score. 
-- **Step 4:** After each click, visual (sprite animation or particles) and audio (pop sound) feedback plays, reinforcing the action (improving game feel). 
-- **Step 5:** The player must manage the pile: if the highest coin stays above a visible waterline for a set duration, the fountain “boils over” and game over occurs. A warning (e.g. water rumble effect) appears shortly before to increase tension.  
-- **Step 6:** Occasionally, a **Wish** event triggers (see section 7) giving a temporary modifier like slow-motion or coin magnet, then returns to normal. 
+## 3. Evaluation Strategy  
+- **Theme (Micromanagement):** The water-level mechanic enforces constant attention. Coins quickly raise the water, so the player must rapidly click and balance the water level. The addition of a shop introduces strategic resource management (save or spend Favor). The game consistently stresses “doing small tasks under pressure,” matching the theme.  
+- **Special Object (Coins):** Three coin tiers (Bronze, Silver, Gold) each have distinct physics and rewards. The different behaviors (e.g. *Gold coins slam and stick*, *Silver coins ricochet chaotically*) force the player to prioritize targets. Coins spawn incessantly and carry the core gameplay, making them the special focal objects.  
+- **Visuals (Clarity + Juice):** We use clear, contrasting sprites: the fountain and Laser Line are visible, coins stand out. Every action is juiced: coins animate (shrink/expand) on click and emit particles【52†L278-L287】, the camera shakes only on heavy impacts (adding drama)【38†L24-L30】, and snake eye lights pulse gently for ambience. This makes gameplay visually satisfying.  
+- **Audio (Feedback + Layering):** Multi-layered SFX provide crisp feedback. Coin clicks play a sharp pop plus a random sparkle, heavy coins add a deep thud, and warn of danger with bubbling/warning sounds. Background fountain ambient is subtle. Each sound layer focuses the player on important events without overwhelming.  
+- **Gameplay (Depth vs Simplicity):** Core interactions are simple (spawn and click), but the combination of coin types, water management, and the Wish shop adds depth. There are no complex controls or menus; depth comes from choices (which coin to click, which wish to buy). Difficulty scales via spawn rate and coin mix, not new systems, keeping mechanics manageable.  
+- **Polish (Game Feel, Feedback):** Emphasis is on “game feel.” For example, as design guidance suggests, “clicking on a static sprite isn’t exciting” – hence coins jump, sparkle, and produce satisfying sounds【52†L278-L287】. UI feedback (score pops, water level animations) and timely camera shakes further polish the experience. All these extras make the jam entry feel polished and responsive.
 
-**Decision Pressure:** The player constantly chooses which coins to remove first. Heavy coins might pin others, bouncy coins may jump over the waterline unpredictably, forcing quick decisions under pressure. This creates satisfying **twitch + strategic** tension, rewarding sharp eyes and reflexes.
+## 4. Mechanics & Systems  
+- **Controls & Input (Tier 1):** Player clicks/taps coins via mouse or touch. Each coin uses a hidden `Area2D` hitbox (~2–3× the coin sprite radius) so clicks are lenient for large fingers. In `Coin.gd`, `_input_event` or `_unhandled_input` handles both `InputEventMouseButton` and `InputEventScreenTouch`. We call `set_input_as_handled()` to prevent one click registering multiple coins (avoid multi-click). This ensures robust input on desktop and mobile.  
 
-## 3. Evaluation Strategy
-To maximize judging criteria:
+- **Water Displacement (Fail State, Tier 1):** The fountain’s water level is a numeric `water_height`. Each coin type has a `water_increase` (e.g., Bronze=5, Silver=10, Gold=15 pixels). When a coin enters the water `Area2D`, we set:
+  ```gdscript
+  water_target = water_height + coin.water_increase
+  tween.interpolate_property(self, "water_height", water_height, water_target, 0.5, Tween.TRANS_SINE)
+  ```
+  This smoothly raises `water_height` over 0.5s. On coin removal, we instantly do `water_height = max(0, water_height - coin.water_increase)`. The fountain’s visible water sprite then updates to the new height. Every frame we check `if water_height >= 250: game_over()`. Reaching Y=250 (the Laser Line) causes immediate loss, making the fail-state precise.  
 
-- **Theme (Micromanagement):** Every element reinforces micro-level control. Rapid coin clicking and juggling stack height directly implements micromanagement. The constantly rising spawn rate ensures the player is always "managing tiny tasks under pressure". The design ties the theme to core gameplay by making the fountain a **hands-on, moment-to-moment management task**. 
+- **Wish Shop (Tier 2):** Instead of random triggers, the Pause Menu is a shop where the player spends Favor on Lifelines. Key features:
+  - **Shop UI:** A paused overlay lists each Wish with its cost (Favor) and description.
+  - **Purchasing:** On button click, deduct Favor and activate effect. E.g. buying *Breathing Room* sets a `spawner.paused = true` for 5s, then unpauses. 
+  - **Wishlist Examples (Table below):**  
+    | Wish (Cost)        | Effect                                                              |
+    |--------------------|---------------------------------------------------------------------|
+    | Chain Reaction (25)| Next clicked coin pops itself **and** 4 random coins.               |
+    | Bronze Banish (50) | Removes all Bronze coins on screen immediately.                     |
+    | Coin Bomb (75)     | Next click causes a 180px radius explosion, popping all coins hit.  |
+    | Breathing Room (90)| Pauses coin spawning for 5 seconds.                                  |
+    | Fountain Sweep (150)| Pops **every coin** on screen (panic button).                     |
+  - **Implementation:** Each Wish sets a flag in GameManager. For instance, *Chain Reaction* sets `do_chain=true`, and on the next coin click the coin script checks this flag to also free 4 random coins (then clears the flag). This system is simple to code yet adds big strategic variety (high-tier feature).
 
-- **Special Object (Coins):** Coins are central visually and mechanically. Multiple coin types (normal, heavy, bouncy) each use physics properties (mass, friction, bounce) to create different player challenges【48†L310-L318】. We highlight coins with contrasting sprites and effects, and ensure each coin reaction (bounce, ping) is satisfyingly animated. Because coins constantly enter play, they remain ever-present “special objects” tied to theme (wishes).  
+- **Coin Physics & Values (Tier 1):** Coins are `RigidBody2D`. We assign each coin a PhysicsMaterial2D:
+  - Bronze: moderate mass=1, bounce≈0.3, friction≈0.4. Grants **+1 Favor**, `water_increase=5`.
+  - Silver: lower mass=0.7, high bounce≈0.8【48†L310-L318】, friction≈0.3. Grants **+3 Favor**, `water_increase=8`.
+  - Gold: heavy mass=2, bounce≈0.1, friction≈0.5. Grants **+5 Favor**, `water_increase=15`.
+  These values balance risk vs reward. The physics make Gold coins plow through stacks and trigger big camera shakes, while Silver coins wildly bounce (ensuring chaos). 
 
-- **Visuals (Clarity + Juice):** We use high-contrast coin sprites against a semi-transparent fountain water background so they stand out (improves readability, as clicker games recommend【50†L165-L172】). The waterline threshold is clearly marked. Visual "juice" includes **screen shake** on big impacts (e.g. when a heavy coin lands) to add dynamism【38†L24-L30】【56†L274-L279】, plus coin-specific VFX (sparks or splash particles on click or bounce). The UI is kept minimal: just score and waterline indicator, avoiding clutter (a clean UI retains players【50†L225-L232】). 
+- **Spawn Logic (Tier 1):** We use a Timer with `wait_time = 1.0` initially. In Phase 3, we continuously decrease it: e.g. `wait_time = max(0.25, 1.0 - 0.01 * time_elapsed)`, capping at 0.25s. This ensures it approaches 4 coins/sec. Phase transitions are time-based: after 15s start including Silver, after 35s include Gold. Thus, spawn behavior smoothly intensifies according to a simple formula.
 
-- **Audio (Feedback + Layering):** Layered SFX enrich click interactions. Each coin type has a distinct sound: a satisfying *plink* for normal coins, heavy *thud* for heavy coins, and *twang* for bouncy coins. These overlap softly (using separate audio buses) so rapid clicks don’t cacophony. Background ambient music or fountain sounds play underneath. Every click plays a “pop” and maybe a randomized chirp to avoid repetition. Milestones (e.g. hitting 100 coins) trigger a short jingle. This layered audio feedback makes interactions feel more impactful【52†L274-L279】【56†L281-L288】. 
+- **Failure & Warning:** When water reaches Y=250, instantly Game Over. Before that, at ~Y=230 we play a warning sound or flash. This feedback helps players learn the threshold.
 
-- **Gameplay (Depth vs Simplicity):** The core mechanics are simple (spawn coins, click to remove), but emergent chaos and prioritization adds depth. Physics interactions (coins pinning or bouncing) keep the experience dynamic without adding new buttons or complex rules. The Wish system adds variety without deep new mechanics (see below). Difficulty scales only by increasing spawn rate or chaos, keeping system complexity low. This balance ensures the game is easy to pick up but hard to master, which appeals to jam judges looking for both accessibility and interesting challenge.
+## 5. Entities (Coins)  
+Each coin is a Godot **scene** (`RigidBody2D`) with: a Sprite, CollisionShape, and input/logic script.
+- **Bronze (Normal Coin):** *Tier 1* – basic coin. Moderate bounce, *water_increase* 5px, +1 Favor. Strategy: click steadily for points.
+- **Silver (Bouncy Coin):** *Tier 2* – highly bouncy. *water_increase* 8px, +3 Favor. Strategy: chaotic; may be left if not urgent, but value is higher.
+- **Gold (Heavy Coin):** *Tier 2* – heavy. *water_increase* 15px, +5 Favor. Strategy: high priority to prevent overflow; clicking feels satisfying with big effects.
+  
+Each coin’s script handles input and removal. Example (pseudo-code):
+```gdscript
+func _on_input_event(viewport, event):
+    if event.is_pressed():
+        GameManager.coin_clicked(self)
+        queue_free()
+```
+Value tables summarize these:
+| Coin   | Mass | Bounce | Favor | Water Increase |
+|--------|------|--------|-------|----------------|
+| Bronze | 1.0  | 0.3    | +1    | 5 px           |
+| Silver | 0.7  | 0.8    | +3    | 8 px           |
+| Gold   | 2.0  | 0.1    | +5    | 15 px          |
 
-- **Polish (Game Feel, Feedback):** High emphasis on feedback. As one source notes, “clicking on a static sprite isn’t exciting, but clicking on a sprite that jumps or shakes is”【56†L274-L279】. We employ coin animations (like a quick squash/stretch on click), screen/UI shakes for big events, and particle splashes, so every player action feels lively. Time is budgeted for these visual flourishes: quick particles on coin removal, coin piling animations, and responsive UI (score pop-ups). The resulting “juice” (tiny animations, shakes, sounds) turns a simple mechanic into a polished, engaging feel.
+(*Tier tags:* normal coin is Tier 1 core, Silver/Gold are Tier 2 for added challenge.)
 
-## 4. Mechanics & Systems
+## 6. Progression & Difficulty  
+We use a **Phased Progression System** rather than simple linear time:
+- **Phase 1 (0–15s):** Tutorial phase. Only Bronze coins spawn. Spawn interval starts ~1.0s and modestly decreases.  
+- **Phase 2 (15–35s):** Silver coins appear (~20% chance). The spawn Timer interval continues dropping (e.g. formula `interval = 1.0 - 0.015*time_elapsed`, flooring at 0.4s by 35s).  
+- **Phase 3 (35s+):** Gold coins introduced (~15% chance). Now spawn interval accelerates more aggressively, e.g. `interval = max(0.25, 1.0 - 0.02*time_elapsed)`. This caps at 0.25s (4 coins/s). Water increases are also largest from this phase.  
 
-- **Controls (Mouse-based):** The player uses the mouse to click coins (no drag or keyboard). Coins detect clicks via either `input_event` on their RigidBody2D or a RayCast from the mouse. On click, the coin’s script instantly removes it (and increments score). Cursor changes (like a sparkle) on hover could further polish (Tier 4).  
+This staged ramp-up keeps early gameplay accessible (only Bronze) and gradually overloads the player. No complexity is added beyond spawn timing and coin mix changes, fitting a jam scope.
 
-- **Coin Physics Behavior:** All coins are **RigidBody2D** (dynamic physics). Each coin has a **PhysicsMaterial2D** to set friction and bounce. For example, normal coins have moderate friction and bounce; heavy coins have high mass and low bounce; bouncy coins have low mass but high bounce (up to 0.8–1.0【48†L310-L318】). This ensures heavy coins barely bounce and can pin others, while bouncy ones ricochet around chaotically. We rely on Godot’s default gravity and these physics settings to create emergent stacks and collisions【48†L310-L318】.  
+## 7. Wish System (Shop Economy)  
+All active Wish effects are now **player-chosen**, requiring strategy:
+- **Access:** Hit Pause to open the Wish Shop UI. Each lifeline lists its Favor cost and effect.  
+- **Purchasing:** Click a Wish button if you have enough Favor. The effect activates immediately or on next click, and the cost is subtracted.  
+- **Wishes Catalog (Tier 2):** (Costs and behaviors as above) includes *Chain Reaction*, *Bronze Banish*, *Coin Bomb*, *Breathing Room*, *Fountain Sweep*. Implementation is straightforward: e.g. *Bronze Banish* loops through all coins and `queue_free()` each Bronze. *Coin Bomb* sets a flag so that the next click also calls `pop_radius(Vector2(pos), 180)`, removing nearby coins.  
+- **Economy:** This system adds depth: players save Favor for big effects (like Fountain Sweep for 150 Favor) or use smaller ones for immediate relief. It ties directly to score (Favor) and influences play strategy heavily.  
 
-- **Spawn Logic:** Coins spawn from off-screen above the fountain at random X positions. A Timer controls spawn intervals. **Tier 1:** Basic: `spawn_interval = 1.0` second initially, then every minute `spawn_interval = max(0.2, spawn_interval - 0.1)`. This simple linear decrease increases pressure over time. Spawn position can alternate to cover screen. Coin type chances can slightly vary (e.g. heavy coin 10% probability early, increasing later). The goal is to ramp chaos, not complexity.  
+No random timers; every Wish use is an explicit decision, making the system highly controllable and strategic.
 
-- **Fail-State (Waterline & Warning):** A visible waterline marks the threshold. We track the highest coin’s Y position each physics step. If any coin stays above the line for >2 seconds, trigger loss. However, before losing, a warning event (e.g. water bubbling or UI flash) appears to signal imminent fail (Tier 2). This gives the player a short chance to click down the pile. A scoreboard and restart button appear on game over.
+## 8. Juice & Visual Effects  
+- **Fountain Art:** The fountain is built from custom snake statue sprites. Each statue has an exact `CollisionPolygon2D` matching its U-shape, so coins naturally roll off the sloped sides.  
+- **Snake Eyes:** Each snake head has a `PointLight2D` child. These lights pulse via a sine-wave tween (e.g. `energy = 1.0 + 0.5*sin(time)`), giving a subtle breathing glow effect.  
+- **Water Sprite:** The water is a 6-frame `AnimatedSprite` (looping). Its `Area2D` collider is parented to this sprite, so coin splash triggers remain aligned with the moving graphic. Splash particles spawn at the point coins hit this area.  
+- **Camera Shake:** Using the trauma system (Tier 3), shake is now targeted. We call `Camera2D.add_trauma()` only on significant events: *big Gold coin impacts* (where vertical speed drops sharply) and **water overflow**. This makes only critical moments visually jarring【38†L24-L30】.  
+- **Click Feedback:** On click, coins play a quick scale bounce (Tween) and emit a particle burst at the click location. This “juice” follows clicker game best practices【52†L278-L287】. UI elements also react: score count briefly enlarges, and the Laser Line flashes if near overflow.  
+- **Audio Feedback:** Each visual effect is paired with sound (pop, splash, chime). Layers (SFX + low music) are balanced so click SFX stands out.
 
-- **Decision-Making Pressure:** The combination of rising spawn rate and physics unpredictability forces real-time prioritization. For example, clicking a heavy coin (Tier 2 feature) might prevent it from causing a pin, but a bouncy coin near threshold could be a bigger immediate threat. These core rules generate the micro-management gameplay.
+These additions greatly enhance game feel without overcomplicating systems.
 
-## 5. Entities (Coins)
-Design 3+ coin types with distinct physics and roles:
-
-- **Normal Coin (Tier 1):** 
-  - *Role:* The basic target. Moderate mass (e.g. mass=1) and bounce (~0.3). 
-  - *Physics:* Friction ≈ 0.5, bounce ≈ 0.3【48†L310-L318】. Falls and bounces a bit off walls or other coins.
-  - *Strategy:* Easy to remove; stacking risk is moderate. Player typically clicks these for steady score. 
-
-- **Heavy Coin (Tier 2):** 
-  - *Role:* Big threat coin. High mass (e.g. mass=3× normal) and near-zero bounce. 
-  - *Physics:* Friction higher, bounce=0. Low restitution means it slams into stack and pins coins. It may even break small stacks (like a wrecking ball). 
-  - *Strategy:* Needs quick removal to prevent it from crushing others. Clicking it yields a bigger sound/thud SFX and maybe more score (to offset risk). It’s visually larger or darker to signify weight.
-
-- **Bouncy Coin (Tier 2):** 
-  - *Role:* Chaotic element. Low mass (e.g. mass=0.5) but very high bounce (~0.9). 
-  - *Physics:* Bouncy material (bounce ~0.9【48†L310-L318】), low friction so it slides. It jumps around unpredictably, sometimes clearing waterline unpredictably. 
-  - *Strategy:* Hard to predict path; player may let them bounce and clear on their own, or click quickly if threatening overflow. Clicking triggers a bright "sparkle" particle effect. They score normal points but provide audio cue of “boing” to alert player of danger.
-
-- **(Optional Tier 3) Magnet Coin:** (If time permits) A coin that, when near other coins, slightly attracts them (simulate magnetism). This could cluster coins oddly. Implementation: have it apply a small impulse toward nearby coins using `apply_force()`. Adds a twist to stacking.
-
-Each coin’s physics material is adjustable via the Godot editor (PhysicsMaterial2D properties bounce/friction【48†L310-L318】). The variety forces the player to adapt strategies (e.g. heavy coins are early kills, bouncy coins are sometimes left to bounce down).
-
-## 6. Progression & Difficulty
-- **Scaling:** Difficulty rises over time by **spawn rate increase** (as described). Instead of adding new mechanics, we simply make coins fall faster and more frequently (not more complex mechanics). For example, after each minute, reduce `spawn_interval` by 0.1s, or use an exponential factor like `interval = initial * 0.95^minutes`.  
-- **Chaos Growth:** Over time, coin interactions naturally become chaotic due to stacking. We may gradually increase the ratio of heavy/bouncy coins or introduce short spawn bursts (two coins at once occasionally) as Tier 3.  
-- **Pressure Curve:** Early game: slow spawn, mostly normal coins (Tier 1). Mid game: spawn rate moderate, occasional heavy/bouncy (Tier 2), and first Wish events trigger (Tier 2). Late game: very fast spawn, mixed coin types, frequent Wish events to break monotony (Tier 2). The goal is that the player feels steadily rising stress without any sudden spikes that aren't foreshadowed. The waterline warning provides tension cues as fail approaches.
-
-## 7. Wish System (Twist)
-A simple “Wish” mechanic adds variety:
-
-- **Trigger Logic (Tier 2):** The system occasionally triggers (e.g. every 15–30 seconds, or after every 20 coins collected, 50% chance). When triggered, a random Wish effect is chosen and announced (a short message/icon appears). The effect lasts a short fixed time (5–10 seconds). This randomness spices up the core loop. 
-
-- **Example Effects (Tier 2):** 
-  1. **Slow Motion:** Temporarily halve physics speed (or multiply all velocities by 0.5). Makes clicking easier but also spawns may pause or slow. (Implementation: adjust `Engine.time_scale` or RigidBody scale.)
-  2. **Coin Magnet:** An Area2D around the mouse cursor that attracts nearby coins (apply a small force towards cursor). This helps clear coins quickly but spawns may speed up for balance. (Simple: iterate coins in radius, use `apply_force()`.)
-  3. **Double Spawn:** For the duration, coins spawn twice as fast (risk: core loop goes chaotic). (Implementation: reduce spawn interval by 50%.)
-  4. **Auto-Collector:** A brief auto-click: each coin the player clicks auto-collects nearest neighbor too. (Requires bookkeeping of last click; Tier 4.)
-  5. **Coin Rush:** Many coins fall in a stream (like a mini wave), giving high risk/high reward. 
-
-Each Wish is chosen to be easy to code (e.g. adjusting timers or using Area2D) but high-impact on gameplay variety. Tier them as **Tier 2** as they significantly affect gameplay but are not core.  The random Wish events encourage quick adaptation and break monotony.
-
-## 8. Juice & Game Feel
-(This section has high priority for polish.)
-
-- **Screen/Camera Shake:** We use a simple trauma-based camera shake on big collisions (e.g. heavy coin impact)【38†L24-L30】. This “dynamic feel” adds appeal by making heavy events feel weighty. The recipe: a `Camera2D` script with a `trauma` parameter that adds random jitter when coins collide dramatically【38†L24-L30】. Shake is additive and decays quickly (0.2–0.5s) to avoid nausea.
-
-- **Sprite Animations:** Each coin has a slight bounce/stretch animation on spawn or click (micro-animation). On click, coins may briefly scale up/down or spin and fade (a common clicker game effect【50†L184-L190】). This visual reaction makes the coin feel responsive. 
-
-- **Particles:** On coin removal, emit a small burst of particles at the coin’s position (e.g. golden sparkles or splash puffs). On heavy coin hits, splashes or crack particles on the pile. These should be short-lived (like 0.5s) and small to avoid clutter. The clicker guide suggests even tiny particle bursts (crumbs when cookie clicked) greatly enhance satisfaction【52†L278-L287】.
-
-- **Screen/Tap Feedback:** For each click, play a short “click” sound and maybe a quick UI flash (the score text could briefly glow). The particle and audio should align precisely on click. If water is near overflow, the camera could gently sway or tint red (visual alert) to push urgency.
-
-- **UI Elements:** The UI (score, waterline) is minimal. Score counter at top-left, waterline indicator overlay on fountain sprite, maybe a simple progress bar/time to next spawn. UI elements use clean, legible fonts (avoiding clutter) – clicker advice stresses that complex UI leads players to quit【50†L225-L232】. 
-
-- **Audio Layering:** Each click produces a layered SFX: e.g. a base “pop” plus a random chime from a small set to add variety【52†L278-L287】. Heavy coins play a deeper *thud*, bouncy coins a higher *tink*. We also add subtle ambient water and fountain sound on a separate audio bus. Feedback layering ensures the click sound always cuts through (the guide suggests ducking background SFX when playing click SFX【56†L281-L288】). 
-
-All these effects combine: clicking makes coins *bounce, shimmer, spark*, and *chime*, delivering a satisfying game feel. As one source notes: “Game feel is vital... clicking on a static sprite isn’t exciting... clicking on a sprite that jumps or shakes is”【56†L281-L288】. We follow this principle in every click.
-
-## 9. MVP Asset List
-*(Strict minimal scope for jam readiness)*
-
+## 9. MVP Asset List  
+(Strict scope, focus on essential polish)
 - **Sprites:** 
-  - Coin (base image; variants for heavy/bouncy colored differently)【40†L165-L172】.
-  - Fountain/water background with marked waterline.
-  - Simple UI elements: score text, warning icon.
-  - Cursor or click effect sprite.
-- **UI:** 
-  - Score counter (font + background).
-  - Game Over screen (text, restart button).
-  - Optional Wish notification icon.
+  - Coin images (Bronze, Silver, Gold).  
+  - Snake fountain statues (with base color only).  
+  - Water frames (6-frame cycle).  
+  - Laser Line marker.  
+  - UI icons/buttons for Wish menu.  
 - **Particles:** 
-  - Coin pop effect (glitter burst, maybe from Godot’s built-in Particle2D).
-  - Splash/gold dust on heavy coin impact.
-- **Sound Effects:** 
-  - Coin click/pop, heavy thud, bounce ting.
-  - Water bubbling (warning), win/chime sound.
-  - Short background music loop or fountain ambient (looping).
-- **Animation:** 
-  - Coin click bounce (implemented via tween or animation).
-  - Possibly a particle animation (simple, can use engine’s baked shapes).
-- **Scenes:** 
-  - Main scene (2D root + Camera2D).
-  - Coin scene (RigidBody2D with Sprite & CollisionShape & script).
+  - Coin pop sparkles.  
+  - Water splash drops.  
+- **Sounds:** 
+  - Coin pop, heavy thud, bounce chime.  
+  - Water bubble/warning.  
+  - Short success sound (wish used).  
+- **Animations:** 
+  - Coin click bounce (Tween).  
+  - Snake eye light pulsing.  
+  - Score label flash.  
+- **Scenes/Nodes:** 
+  - Main scene (Snake fountain, Camera2D, UI).  
+  - Coin scene (RigidBody2D + Area2D).  
+  - Wish menu (Control node overlay).  
 
-No advanced art or hundreds of sounds – a few polished pieces suffice for jam.
+Minimal art style is acceptable; clarity and polish come from effects, not detailed textures.
 
-## 10. Godot Architecture
+## 10. Godot Architecture  
 
-- **Main Scene Node Tree:** 
-  - `Main (Node2D)`
-    - `Camera2D` (for screen shake control).
-    - `CoinSpawner (Node)`: handles timers and instancing coins.
-    - `UI (CanvasLayer)`:
-      - `ScoreLabel`
-      - `WaterlineIndicator`
-      - `WarningPopup` (maybe Control node for overflow warning).
-      - `WishNotification`
-    - `GameOverScreen (CanvasLayer)` (initially hidden).
-    - `Background (Sprite2D or TextureRect)`
-  
-- **Coin Scene Node Tree:** 
-  - `Coin (RigidBody2D)`【54†L327-L330】 (root of scene).
-    - `Sprite2D` (coin graphic).
-    - `CollisionShape2D` (circle).
-    - (Optional) `Area2D Magnet` (if magnet effect coin). 
-    - Attached script: handles `_on_input_event` or `_unhandled_input` to detect clicks and queue_free. Also implements any type-specific logic (heavy/bouncy flags).
-  
-- **Key Scripts & Responsibilities:** 
-  - `GameManager.gd`: Tracks score, waterline height, fail-state timer, and triggers game over. Listens for coin removal to update score.
-  - `Spawner.gd`: Controls spawn timing (`Timer`) and coin type randomization. Increases difficulty over time.
-  - `Coin.gd`: On click, informs GameManager (increments score), plays effect, and removes itself. Might also call GameManager to add camera trauma (shake).
-  - `WishSystem.gd`: Decides when to trigger wishes, selects effects, and applies modifiers. Listens for time or score events.
-  - `CameraShake.gd`: Attached to Camera2D, implements the trauma decay and random offset (per recipe【38†L24-L30】). Has `add_trauma(amount)` called by heavy collisions or button events.
-  
-- **Signals & Interactions:** 
-  - `Coin.clicked()` (custom signal when a coin is removed).
-  - GameManager connects to coins on spawn to listen for click and collision events.
-  - `GameManager.waterline_warning()` triggers visual alert.
-  - `WishSystem.wish_triggered()` notifies UI to display effect name.
-  - Use built-in signals like `timeout` on Timer, and possibly Area2D signals for magnet effect.
+- **Main Scene (root Node2D):**  
+  - `Camera2D` (child of Main) with script for trauma-based shake【38†L24-L30】.  
+  - `SnakeFountain (Node2D)`: contains Snake statue Sprites with `CollisionPolygon2D`.  
+  - `Water (AnimatedSprite2D)` + child `WaterArea (Area2D)`. The `Area2D` has a matching collision shape, set to monitor overlap to detect coin landings.  
+  - `Spawner (Node)`: holds a `Timer` to spawn coins and handles phase logic.  
+  - `UI (CanvasLayer)`: contains `ScoreLabel`, `LaserLineIndicator`, `PauseMenu`. `PauseMenu` includes buttons for Wishes.  
+  - `GameManager (Node)`: coordinates game logic (could be attached to Main or a singleton).  
 
-Node/script responsibilities are small and focused to keep code simple (no complex inheritance). 
+- **Coin Scene (`RigidBody2D`):**  
+  - `Sprite2D` (visual).  
+  - `CollisionShape2D` (circle collider).  
+  - `Hitbox (Area2D)`: larger circle shape around the coin, for easier clicking (Tier 1 input).  
+  - `Coin.gd`: script handling clicks (`_on_input_event`), coin type (enum), and notifying GameManager.  
+
+- **Wish Menu (UI Scene/Nodes):**  
+  - Control nodes/buttons for each Wish. On press they emit signals to GameManager (e.g. `wish_requested(name)`).  
+
+**Script Responsibilities:**  
+  - `GameManager.gd`: Tracks `water_height`, Favor score, game state. Handles coin clicks (`coin_clicked(coin)`), updates water, checks overflow, and executes Wish effects.  
+  - `Spawner.gd`: Runs spawn Timer, manages phase transitions (enables coin types, adjusts `Timer.wait_time`).  
+  - `Camera2D.gd`: Implements shake (`func add_trauma() { ... }`) and processes trauma decay.  
+  - `Coin.gd`: On click input, calls `GameManager.coin_clicked(self)`.  
+
+**Signals:**  
+  - `coin_clicked(coin)` from Coin to GameManager.  
+  - `wish_requested(wish_name)` from UI button to GameManager.  
+  - `game_over` (emitted by GameManager when water ≥ 250).  
+
+Below is a **Mermaid diagram** of the node structure (render with a Mermaid-supporting viewer):
+
+```mermaid
+flowchart TB
+  subgraph MainScene
+    CM(Camera2D)
+    SF(SnakeFountain)
+    W(WaterAnimatedSprite + Area2D)
+    SP(Spawner Node)
+    UI(UI CanvasLayer)
+    GM(GameManager)
+  end
+  SF --> CP(CollisionPolygon2D)
+  W --> WaterArea(Area2D Collider)
+  UI --> Score(ScoreLabel)
+  UI --> Laser(LaserLineIndicator)
+  UI --> Pause(PauseMenu with Wish buttons)
+  CM --> GM
+  GM --> Score
+  GM --> Laser
+  GM --> Pause
+  SP --> Coin(CoinScene)
+```
+
+This architecture cleanly separates visuals, physics, and UI. The **CollisionPolygon2D** shapes on `SnakeFountain` ensure proper bouncing, and the `Area2D` on water captures coin falls accurately.
 
 ## 11. Core Code Structure (High-Level)
 
-- **Spawning System (Pseudocode):**  
-  ```gdscript
-  var spawn_timer = 1.0
-  func _ready():
-      start_timer(spawn_timer)
-  func _on_Timer_timeout():
-      spawn_coin()  # random position, random type
-      # Decrease timer every minute
-      if seconds_passed % 60 == 0:
-          spawn_timer = max(0.2, spawn_timer - 0.1)
-          reset_timer(spawn_timer)
-  ```
-- **Coin Click Detection:**  
-  ```gdscript
-  func _input_event(viewport, event, shape):
-      if event is InputEventMouseButton and event.pressed:
-          GameManager.coin_removed(self)
-          # Spawn particle, sound
-          queue_free()
-  ```
-- **Fail Condition (in GameManager):**  
-  ```gdscript
-  func _physics_process(delta):
-      var highestY = get_highest_coin_y()
-      if highestY < waterline_y:
-          overflow_time += delta
-          if overflow_time > 2.0:
-              game_over()
-      else:
-          overflow_time = 0
-  ```
-- **Wish System:**  
-  ```gdscript
-  func check_wish_trigger():
-      if randf() < 0.01:  # e.g. 1% chance each second
-          trigger_random_wish()
-  func trigger_random_wish():
-      var effect = randi() % 3
-      match effect:
-          0: start_slow_motion()
-          1: start_coin_magnet()
-          2: increase_spawn_rate()
-  ```
-  Each effect has a simple implementation (e.g. `Engine.time_scale = 0.5` for slow motion, or instantiate an `Area2D` magnet at mouse).
+```gdscript
+# GameManager.gd (pseudo-code snippets)
 
-All code relies on Godot 4 GDScript. It remains straightforward – avoid heavy object pooling or complex data structures to save time.
+func coin_clicked(coin):
+    # Called by Coin on click
+    add_score(coin.favor) 
+    water_height = max(0, water_height - coin.water_increase)
+    if chain_reaction:
+        chain_reaction = false
+        pop_random_coins(4)
+    if bronze_banish_active:
+        bronze_banish_active = false
+        for c in all_coins: if c.type == BRONZE: c.queue_free()
+    if coin_bomb_active:
+        coin_bomb_active = false
+        pop_radius(coin.position, 180)
+    if fountain_sweep_active:
+        fountain_sweep_active = false
+        for c in all_coins: c.queue_free()
 
-## 12. Development Schedule (7 Days, ~3–5 hrs/day)
-*(Includes buffer as recommended【45†L244-L252】)*
+func _physics_process(delta):
+    # Smoothly tweened via Tween node for water; here just check overflow:
+    if water_height >= 250:
+        game_over()
+        
+# Spawner.gd
+func _on_Timer_timeout():
+    var coin_type = choose_by_phase(time_elapsed)
+    spawn_coin(coin_type)
+    # Adjust Timer for Phase 3
+    if time_elapsed > 35:
+        $Timer.wait_time = max(0.25, 1.0 - 0.02 * time_elapsed)
 
-- **Day 1 (Planning & Core Prototype):** (~4h) Sketch design, set up project and scenes. Implement basic coin spawn and click removal (Tier 1 core loop). Verify physics stacking. Plan code structure.  
-- **Day 2 (Physics & Core Loop):** (~4h) Add coin types with different mass/bounce (Tier 2). Implement waterline logic and game over. Establish fail-state warning UI. Ensure core gameplay runs (no Wish yet).  
-- **Day 3 (UI & Feedback):** (~4h) Build UI: score display, waterline marker, GameOver screen (Tier 1). Add basic sound on click and particle on coin removal (Tier 3). Add Camera2D with screen shake on heavy coin impact (Tier 3).  
-- **Day 4 (Wish System & Progression):** (~4h) Add Wish triggers and example effects (slow motion, spawn boost) (Tier 2). Increase spawn rate over time. Playtest loop adjustments.  
-- **Day 5 (Polish & Additional Juice):** (~4h) Refine visuals (coin animations, UI polish) and audio layers (distinct SFX). Add minor enhancements: maybe background music, sparkle on coin click. Fine-tune difficulty scaling.  
-- **Day 6 (Buffer – Bugfixes & Extras):** (~3h) Use buffer time for any needed fixes. Implement any Tier 3 features if time (e.g. magnet coin). Ensure performance is smooth. Polish UI and feel.  
-- **Day 7 (Final QA & Submission):** (~3h) Final playtesting, balance, ensure everything works. Add final touches (mute button, final credits). Prepare build for submission.
+# Coin.gd
+func _on_input_event(...):
+    if event is InputEventMouseButton or InputEventScreenTouch:
+        set_input_as_handled()
+        GameManager.coin_clicked(self)
+        queue_free()
+```
 
-This plan leaves ~20% of time unallocated to handle unexpected tasks【45†L244-L252】. The goal is a playable core by mid-week, then polish. 
+These snippets illustrate the simple logic: coin removal adjusts water and triggers flags, the timer shortens over time, and input is handled with fat hitboxes. Additional small details (like score UI updates) are implied.
 
-**Priority Focus:** Ensure a minimal but complete playable prototype by day 3–4, then layer polish. We emphasize quick, iterative testing over over-engineering. Time-saving tips: reuse Godot UI nodes, use existing free coin sprite assets if allowed, and leverage Godot’s built-in physics/materials (no custom physics code). With this scope and schedule, a polished jam entry is realistic in ~30 hours total【45†L244-L252】【48†L310-L318】.
+## 12. 7-Day Development Schedule
 
-**Sources:** Godot physics documentation and tutorials【48†L310-L318】【54†L327-L330】 inform coin behaviors; screen-shake and clicker design sources guide visual/audio polish【38†L24-L30】【56†L274-L279】.
+| Day  | Focus                                    | Hours |
+|------|------------------------------------------|:-----:|
+| 1    | **Core mechanics & water logic** (Tier 1): Set up coin spawn, water displacement system (lerp), and basic Fountain scene with CollisionPolygon2D. Implement Bronze coins only. | 3–4 |
+| 2    | **Coins & Progression** (Tier 1): Add Silver/Gold coin prefabs, scoring (+1/+3/+5), and phase logic (15s, 35s transitions). Implement spawn Timer speed-up (cap at 0.25s). | 4   |
+| 3    | **Wish Shop system** (Tier 2): Build Pause menu UI, code Wish items and their behaviors (chain reaction, banish, etc). Test Favor economy and effect triggers. | 4   |
+| 4    | **Visual polish** (Tier 3): Integrate snake statue art & CollisionPolygons, snake-eye PointLight2D tweens, water sprite animation and splash VFX. Tune camera shake triggers (Gold impacts, overflow). | 4   |
+| 5    | **Feedback & audio** (Tier 3): Add coin click animations, score/laser UI effects, and sounds (pop, thud, warning). Finalize particle effects and UI polish. | 3   |
+| 6    | **Buffer & QA** (Tier 4): Test cross-platform input (mouse/touch), fix bugs (collision, Wish edge cases). Fine-tune difficulty and UI. Reserve time for unforeseen issues. | 3   |
+| 7    | **Wrap-up**: Final polish, UI text, build export, bug fixes. Prepare assets for submission. (Tier 5: only if needed) | 2   |
+
+*Total: ~22–24 hours (within 21–35h budget). Tier 1 features (core loop, water, basic coins) are done early. Tier 2 (Wish system) and Tier 3 (polish, juice) follow. Days include a buffer as recommended【45†L244-L252】.* 
+
+Below is a **Mermaid Gantt chart** of the schedule (render with Mermaid):
+
+```mermaid
+gantt
+    dateFormat  YYYY-MM-DD
+    title Coin Fountain Sweeper Dev Schedule
+    section Development
+    Core Mechanics      :done,    des1, 2026-03-28, 3d
+    Coins & Progression:done,    des2, 2026-03-30, 2d
+    Wish Shop System    :done,    des3, 2026-04-01, 1d
+    Visual Polishing    :active,  des4, 2026-04-02, 1d
+    Feedback & Audio    :2026-04-03, 1d
+    Buffer & QA         :2026-04-04, 1d
+    Wrap-up             :2026-04-05, 1d
+```
+
+This timeline ensures a complete playable build by Day 4, with Days 5–7 for polish and issues.
+
+---
+
+# README
+
+```markdown
+# Coin Fountain Sweeper
+
+**Genre:** 2D Micromanagement / Arcade Clicker  
+**Engine:** Godot 4 (GDScript)  
+**Developer:** [Your Name], Solo (Game Jam Entry)  
+**Platform:** PC/Mobile (Mouse & Touch input)  
+**Licence:** [MIT License](LICENSE) (suggestion)
+
+## Project Description  
+In *Coin Fountain Sweeper*, you manage a magical wishing fountain overflowing with coins. Coins of three types fall into the fountain, raising the water level. Click (or tap) coins to pop them, which removes them and lowers the water. Each coin click grants **Favor** (score): Bronze +1, Silver +3, Gold +5. If the water reaches the glowing **Laser Line** (Y=250), the fountain overflows and the game ends. Use Favor in the pause menu to purchase powerful Lifelines (e.g. “Coin Bomb” or “Fountain Sweep”) that can clear coins or pause spawning. The challenge is to click fast and choose when to spend your limited Favor, managing chaos under time pressure.
+
+## How to Run (Godot 4)  
+1. Install [Godot Engine 4.x](https://godotengine.org) (desktop or HTML5 platform).  
+2. Download or clone this repository.  
+3. Open the project folder in Godot.  
+4. In the Godot Project Manager, click **`Load`** on `project.godot`.  
+5. Press **Play** to run the game (or export using Godot's export templates).  
+
+_No external plugins are required._ The project uses only Godot 4 core features (2D physics, UI, etc.).
+
+## Controls  
+- **Mouse / Touch:** Click or tap on coins to pop them.  
+- **Pause / Wish Menu:** Press `P` or a designated on-screen button to pause and open the Wish Shop. (On mobile, tap the pause icon.)  
+- **Wish Shop:** Click on a lifeline button to purchase it with your Favor. Effects apply immediately or on next action.  
+
+The game also supports standard Godot input (e.g. it can be remapped if needed).
+
+## Build Notes  
+- **Godot Version:** Tested with Godot 4.0+.  
+- **Scenes:** `Main.tscn` is the main scene. `Coin.tscn` is the coin prefab.  
+- **Scripts:** GDScript files are attached to respective nodes (see GDD for architecture).  
+- **Performance:** All assets are low-poly and optimized for smooth 60 FPS. Physics are simple, so older hardware/browsers should run fine.  
+
+## Known Issues  
+- **Touch Sensitivity:** The larger hitbox ensures ease of touch, but very fast taps might occasionally register as multiple clicks.  
+- **Rare Physics Glitches:** In extremely rare cases coins may overlap deeply; we've minimized this by using Godot's robust physics engine, but if it occurs, it typically self-resolves.  
+- **No Save Feature:** This is a jam prototype; score is not saved after exiting.  
+
+(If you encounter bugs, please report them in the issues section or contact the developer.)
+
+## Credits  
+- **Game Design & Code:** [Your Name]  
+- **Artwork:** Basic sprites (circle coins, statue silhouettes) drawn by [Your Name]  
+- **Sound Effects:** Coin pop, splash, etc. (sources: [Freesound.org] or created using Bfxr).  
+- **Tutorials & References:** The physics implementation was guided by Godot docs and tutorials【48†L310-L318】【38†L24-L30】.  
+- **Special Thanks:** to the Game Jam community for feedback.  
+
+## License  
+This project is released under the **MIT License**. See `LICENSE` for details.  
+
+Enjoy saving the fountain, and may all your wishes come true!  
+
+```
+

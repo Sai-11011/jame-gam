@@ -82,7 +82,7 @@ metadata/_edit_lock_ = true
 metadata/_edit_group_ = true
 
 [node name="Water" type="AnimatedSprite2D" parent="Fountain" unique_id=48730719]
-position = Vector2(650, 490)
+position = Vector2(650, 510)
 scale = Vector2(1.05, 0.85)
 sprite_frames = SubResource("SpriteFrames_6iyac")
 autoplay = "default"
@@ -99,13 +99,13 @@ shape = SubResource("RectangleShape2D_8gbba")
 
 [node name="Line" type="Sprite2D" parent="Fountain" unique_id=1742930681]
 z_index = 3
-position = Vector2(650, 409)
+position = Vector2(650, 424)
 texture = ExtResource("3_21xkr")
 metadata/_edit_lock_ = true
 
 [node name="Statues" type="Sprite2D" parent="Fountain" unique_id=493462382]
 z_index = 5
-position = Vector2(650, 430)
+position = Vector2(650, 450)
 scale = Vector2(1, 1.1)
 texture = ExtResource("2_jjvhh")
 metadata/_edit_lock_ = true
@@ -128,6 +128,7 @@ script = ExtResource("6_344ge")
 autostart = true
 
 [node name="Walls" type="StaticBody2D" parent="." unique_id=345947501]
+position = Vector2(0, 20)
 collision_layer = 4
 collision_mask = 3
 metadata/_edit_group_ = true
