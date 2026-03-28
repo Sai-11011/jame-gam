@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://flifelmkfobh" path="res://Scripts/point_light_2d.gd" id="6_344ge"]
 [ext_resource type="Script" uid="uid://dlty5evjorw3x" path="res://Scripts/camera_2d.gd" id="9_ynf5e"]
 [ext_resource type="PackedScene" uid="uid://d2tvabsqdrra" path="res://Scenes/pause_menu.tscn" id="10_hptm8"]
+[ext_resource type="PackedScene" uid="uid://djfcirar6eatp" path="res://Scenes/wish.tscn" id="11_6iyac"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6iyac"]
 atlas = ExtResource("3_d1ilt")
@@ -119,6 +120,9 @@ metadata/_edit_lock_ = true
 
 [node name="PauseMenu" parent="CanvasLayer" unique_id=341410418 instance=ExtResource("10_hptm8")]
 process_mode = 3
+visible = false
+
+[node name="Wish" parent="CanvasLayer" unique_id=220847660 instance=ExtResource("11_6iyac")]
 visible = false
 
 [node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=1638754305]

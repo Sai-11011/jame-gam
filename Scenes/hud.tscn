@@ -45,6 +45,12 @@ theme = ExtResource("2_fccik")
 theme_override_font_sizes/font_size = 24
 text = "Pause"
 
+[node name="WishButton" type="Button" parent="MarginContainer/HBoxContainer" unique_id=1533256204]
+layout_mode = 2
+theme = ExtResource("2_fccik")
+theme_override_font_sizes/font_size = 24
+text = "Wish"
+
 [node name="Score" type="Label" parent="MarginContainer/HBoxContainer" unique_id=1456149857]
 custom_minimum_size = Vector2(180, 0)
 layout_mode = 2
@@ -71,3 +77,4 @@ theme_override_font_sizes/font_size = 24
 text = "Water Level : 0%"
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="MarginContainer/HBoxContainer/WishButton" to="." method="_on_wish_button_pressed"]

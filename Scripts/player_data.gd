@@ -2,9 +2,10 @@ extends Node
 
 var score := 0
 var time := 0
+var best_time:= 0
+
 @onready var timer := $Timer
 
-var best_time: float = 0.0
 var master_volume: float = 1.0
 var music_volume: float = 1.0
 var sfx_volume: float = 1.0
@@ -44,10 +45,15 @@ func save_game() -> void:
 func _on_timer_timeout() -> void:
 	time += 1
 
-func get_formatted_time() -> String:
-	var minutes: int = time / 60
-	var seconds: int = time % 60
-	return "%d:%02d" % [minutes, seconds]
+func get_formatted_time(a := "") -> String:
+	if a=="best":
+		var minutes: int = best_time / 60
+		var seconds: int = best_time % 60
+		return "%d:%02d" % [minutes, seconds]
+	else:
+		var minutes: int = time / 60
+		var seconds: int = time % 60
+		return "%d:%02d" % [minutes, seconds]
 
 func reset_stats() -> void:
 	score = 0

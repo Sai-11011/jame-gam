@@ -1,0 +1,137 @@
+[gd_scene format=3 uid="uid://djfcirar6eatp"]
+
+[ext_resource type="Script" uid="uid://b0i88rgsm2o" path="res://wish_panel.gd" id="1_reknv"]
+[ext_resource type="Texture2D" uid="uid://beut0dyhjwi16" path="res://Assets/UI/ui_bg.png" id="2_ffbvw"]
+[ext_resource type="FontFile" uid="uid://b4kxwvc6nw0sx" path="res://Assets/Fonts/Unbounded-Bold.ttf" id="3_36l8b"]
+[ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="4_00lfm"]
+
+[node name="Wish" type="Control" unique_id=220847660]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_reknv")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=2097232540]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_ffbvw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=151679623]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 83.0
+offset_right = -73.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 30
+alignment = 1
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=264371305]
+layout_mode = 2
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_36l8b")
+theme_override_font_sizes/font_size = 56
+text = "Make a wish"
+horizontal_alignment = 1
+
+[node name="FavorLabel" type="Label" parent="VBoxContainer/Label" unique_id=38735387]
+layout_mode = 0
+offset_left = 989.0
+offset_top = 100.0
+offset_right = 1124.0
+offset_bottom = 130.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "Favor : 0 "
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=2074051125]
+layout_mode = 2
+theme_override_constants/separation = 50
+alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer/HBoxContainer" unique_id=269181629]
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/h_separation = 30
+theme_override_constants/v_separation = 30
+
+[node name="ChainButton" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=1867554273]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 15
+text = "Chain Reaction"
+
+[node name="BronzeButton" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=565458767]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 15
+text = "Bronze Banish"
+
+[node name="BombButton" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=2013066872]
+layout_mode = 2
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 15
+text = "Coin Bomb"
+
+[node name="FreezeButton" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=1984524127]
+layout_mode = 2
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 15
+text = "Breathing Room"
+
+[node name="WipeButton" type="Button" parent="VBoxContainer/HBoxContainer/GridContainer" unique_id=1291862638]
+layout_mode = 2
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 15
+text = "Fountain Sweep"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/HBoxContainer" unique_id=83404423]
+custom_minimum_size = Vector2(450, 450)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer/PanelContainer" unique_id=976202236]
+layout_mode = 2
+alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=1895871712]
+custom_minimum_size = Vector2(300, 300)
+layout_mode = 2
+size_flags_horizontal = 4
+bbcode_enabled = true
+
+[node name="ConfirmButton" type="Button" parent="VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=57646131]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 24
+text = "Confirm"
+
+[node name="CloseButton" type="Button" parent="VBoxContainer" unique_id=1694836540]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme = ExtResource("4_00lfm")
+theme_override_font_sizes/font_size = 24
+text = "Close"
+
+[connection signal="visibility_changed" from="." to="." method="_on_visibility_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GridContainer/ChainButton" to="." method="_on_chain_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GridContainer/BronzeButton" to="." method="_on_bronze_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GridContainer/BombButton" to="." method="_on_bomb_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GridContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/GridContainer/WipeButton" to="." method="_on_wipe_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]

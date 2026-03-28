@@ -3,17 +3,14 @@ extends Control
 @onready var start := load(Global.SCENES.start)
 @onready var timer_label := $MarginContainer/VBoxContainer/HBoxContainer/Time
 @onready var score_label := $MarginContainer/VBoxContainer/HBoxContainer/Score
-
-func _ready() -> void:
-	if PlayerData.time > PlayerData.best_time:
-			PlayerData.best_time = PlayerData.time
-			PlayerData.save_game() 
-			print("New High Score Saved!")
+@onready var best_time_lable := $MarginContainer/Label
 
 func set_final_stats()-> void:
 	PlayerData.timer.stop()
 	timer_label.text = "Time : " + PlayerData.get_formatted_time()
 	score_label.text = "Favor : " + str(PlayerData.score)
+	best_time_lable.text = "Best Time : "+PlayerData.get_formatted_time("best")
+	PlayerData.save_game()
 	show()
 
 func _on_restart_button_pressed() -> void:

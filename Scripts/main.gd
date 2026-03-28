@@ -11,6 +11,7 @@ extends Node2D
 @onready var pause_menu: Control = $CanvasLayer/PauseMenu
 @onready var percent_label : Label = $CanvasLayer/Hud/FillLabel
 @onready var laser_line := $Fountain/Line
+@onready var wish := $CanvasLayer/Wish
 
 var danger_tween: Tween
 var water_tween: Tween
@@ -82,11 +83,15 @@ func spawn_coin() -> void:
 	
 	var toss_side = randi() % 2
 	if toss_side == 0:
-		new_coin.position = Vector2(100, 100)
-		new_coin.linear_velocity = Vector2(randf_range(200.0, 450.0), randf_range(-200.0, -400.0))
+		# Spawn at Y = -100 (Off the top of the screen)
+		new_coin.position = Vector2(0, -10)
+		# Throw them HARD right, with a slight upward arc for hang time
+		new_coin.linear_velocity = Vector2(randf_range(450.0, 750.0), randf_range(-150.0, 50.0))
 	else:
-		new_coin.position = Vector2(1180, 100)
-		new_coin.linear_velocity = Vector2(randf_range(-200.0, -450.0), randf_range(-200.0, -400.0))
+		# Spawn at Y = -100 (Off the top of the screen)
+		new_coin.position = Vector2(1280, -10)
+		# Throw them HARD left, with a slight upward arc for hang time
+		new_coin.linear_velocity = Vector2(randf_range(-450.0, -750.0), randf_range(-150.0, 50.0))
 
 	new_coin.clicked.connect(_on_coin_clicked)
 	coin_container.add_child(new_coin)
@@ -186,6 +191,10 @@ func update_water_level() -> void:
 	
 	if fill_percent >= 1.0:
 		print("GAME OVER! The fountain overflowed!")
+		if PlayerData.time > PlayerData.best_time:
+			PlayerData.best_time = PlayerData.time
+			PlayerData.save_game() 
+			print("New High Score Saved!")
 		Global.is_game_over = true
 		get_tree().call_group("Camera", "add_trauma", 0.8)
 		get_tree().paused = true
@@ -219,7 +228,7 @@ func freeze_time() -> void:
 	spawn_timer.stop() # Stop the coins falling!
 	
 	# Wait exactly 5 seconds using a quick built-in timer
-	await get_tree().create_timer(6.0).timeout 
+	await get_tree().create_timer(6.0,false).timeout 
 	
 	# Resume the chaos!
 	if not Global.is_game_over:

@@ -9,7 +9,9 @@ const SCENES :Dictionary = {
 	"splash":"uid://chi47vo2opelm",
 	"start":"uid://b3k3jajoe6tme",
 	"game_over":"uid://cbfhggauibbmm",
-	"settings":"uid://b41gctw0eapfp"
+	"settings":"uid://b41gctw0eapfp",
+	"pause":"uid://d2tvabsqdrra",
+	"wish":"uid://djfcirar6eatp"
 }
 
 const WISHES : Dictionary = {
@@ -17,25 +19,25 @@ const WISHES : Dictionary = {
 		"id": "chain",
 		"name": "Chain Reaction",
 		"desc": "Your next click pops the target + 4 random coins anywhere.",
-		"cost": 25 # Cheap, fast way to clear a little space.
+		"cost": 50 # Cheap, fast way to clear a little space.
 	},
 	"bronze_banish": {
 		"id": "bronze_banish",
 		"name": "Bronze Banish",
 		"desc": "Instantly pops EVERY Bronze coin on the screen.",
-		"cost": 60 # Clears the bulk clutter, leaves the high-value coins behind.
+		"cost": 100 # Clears the bulk clutter, leaves the high-value coins behind.
 	},
 	"bomb": {
 		"id": "bomb",
 		"name": "Coin Bomb",
 		"desc": "Your next click creates a blast radius, popping nearby coins.",
-		"cost": 90 # Great for clearing out a specific heavy pile-up.
+		"cost": 150 # Great for clearing out a specific heavy pile-up.
 	},
 	"time_freeze": {
 		"id": "time_freeze",
 		"name": "Breathing Room",
 		"desc": "Stops the coin spawner from dropping anything for 5 seconds.",
-		"cost": 100 # Pure survival utility. Gives them time to click normally.
+		"cost": 180 # Pure survival utility. Gives them time to click normally.
 	},
 	"wipe": {
 		"id": "wipe",

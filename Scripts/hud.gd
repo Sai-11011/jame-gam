@@ -2,6 +2,7 @@ extends Control
 
 @onready var score := $MarginContainer/HBoxContainer/Score
 @onready var timer := $MarginContainer/HBoxContainer/Timer
+@onready var wish_menu := $"../Wish"
 @export var pause : Control
 var last_score: int = 0
 
@@ -27,3 +28,9 @@ func _on_button_pressed() -> void:
 	if pause != null :
 		get_tree().paused = true
 		pause.show()
+
+
+func _on_wish_button_pressed() -> void:
+	AudioManager.play_button_click()
+	get_tree().paused = true
+	wish_menu.show() # Show the shop!

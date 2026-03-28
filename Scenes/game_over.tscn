@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dnhqs5ekifleb" path="res://Scripts/game_over.gd" id="1_ojehl"]
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_8fo1c"]
 [ext_resource type="Texture2D" uid="uid://beut0dyhjwi16" path="res://Assets/UI/ui_bg.png" id="2_ek8ke"]
+[ext_resource type="FontFile" uid="uid://d6eq20vegrbl" path="res://Assets/Fonts/LemonMilkbold.otf" id="3_eoghk"]
 
 [node name="GameOver" type="Control" unique_id=528653836]
 layout_mode = 3
@@ -29,6 +30,12 @@ theme_override_constants/margin_top = 100
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 100
 
+[node name="Label" type="Label" parent="MarginContainer" unique_id=193885053]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 24
+
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=839712239]
 layout_mode = 2
 size_flags_vertical = 4
@@ -36,6 +43,8 @@ theme_override_constants/separation = 30
 
 [node name="GameOver" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1645184011]
 layout_mode = 2
+theme_override_constants/outline_size = 5
+theme_override_fonts/font = ExtResource("3_eoghk")
 theme_override_font_sizes/font_size = 56
 text = "Game Over"
 horizontal_alignment = 1

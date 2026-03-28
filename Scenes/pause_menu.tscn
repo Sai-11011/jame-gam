@@ -2,10 +2,6 @@
 
 [ext_resource type="Script" uid="uid://bwekoct4i4ry6" path="res://Scripts/pause_menu.gd" id="1_emv3i"]
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_k0w1u"]
-[ext_resource type="Texture2D" uid="uid://beut0dyhjwi16" path="res://Assets/UI/ui_bg.png" id="3_1och7"]
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bpi0q"]
-texture = ExtResource("3_1och7")
 
 [node name="PauseMenu" type="Control" unique_id=341410418]
 layout_mode = 3
@@ -73,115 +69,7 @@ size_flags_horizontal = 4
 theme = ExtResource("2_k0w1u")
 text = "Start Menu"
 
-[node name="WishPanel" type="Panel" parent="." unique_id=711632896]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxTexture_bpi0q")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="WishPanel" unique_id=861635373]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 83.0
-offset_right = -73.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 30
-alignment = 1
-
-[node name="Label" type="Label" parent="WishPanel/VBoxContainer" unique_id=719869564]
-layout_mode = 2
-theme_override_font_sizes/font_size = 56
-text = "Make a wish"
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="WishPanel/VBoxContainer" unique_id=1878236760]
-layout_mode = 2
-theme_override_constants/separation = 50
-alignment = 1
-
-[node name="GridContainer" type="GridContainer" parent="WishPanel/VBoxContainer/HBoxContainer" unique_id=2062861392]
-custom_minimum_size = Vector2(100, 100)
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 30
-
-[node name="ChainButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/GridContainer" unique_id=1493399643]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 15
-text = "Chain Reaction"
-
-[node name="BronzeButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/GridContainer" unique_id=1325531897]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 15
-text = "Bronze Banish"
-
-[node name="BombButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/GridContainer" unique_id=1092100594]
-layout_mode = 2
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 15
-text = "Coin Bomb"
-
-[node name="FreezeButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/GridContainer" unique_id=675974251]
-layout_mode = 2
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 15
-text = "Breathing Room"
-
-[node name="WipeButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/GridContainer" unique_id=1696275401]
-layout_mode = 2
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 15
-text = "Fountain Sweep"
-
-[node name="PanelContainer" type="PanelContainer" parent="WishPanel/VBoxContainer/HBoxContainer" unique_id=1065339515]
-custom_minimum_size = Vector2(450, 450)
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="WishPanel/VBoxContainer/HBoxContainer/PanelContainer" unique_id=2090209746]
-layout_mode = 2
-alignment = 1
-
-[node name="RichTextLabel" type="RichTextLabel" parent="WishPanel/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=2002567129]
-custom_minimum_size = Vector2(300, 300)
-layout_mode = 2
-size_flags_horizontal = 4
-bbcode_enabled = true
-
-[node name="ConfirmButton" type="Button" parent="WishPanel/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer" unique_id=1171348833]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 24
-text = "Confirm"
-
-[node name="CloseButton" type="Button" parent="WishPanel/VBoxContainer" unique_id=416166134]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 4
-theme = ExtResource("2_k0w1u")
-theme_override_font_sizes/font_size = 24
-text = "Close"
-
 [connection signal="pressed" from="MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/WishButton" to="." method="_on_wish_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/RestartButton" to="." method="_on_restart_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/StartMenuButton" to="." method="_on_start_menu_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/GridContainer/ChainButton" to="." method="_on_chain_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/GridContainer/BronzeButton" to="." method="_on_bronze_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/GridContainer/BombButton" to="." method="_on_bomb_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/GridContainer/FreezeButton" to="." method="_on_freeze_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/GridContainer/WipeButton" to="." method="_on_wipe_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/HBoxContainer/PanelContainer/VBoxContainer/ConfirmButton" to="." method="_on_confirm_button_pressed"]
-[connection signal="pressed" from="WishPanel/VBoxContainer/CloseButton" to="." method="_on_close_button_pressed"]
