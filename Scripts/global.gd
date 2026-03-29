@@ -60,6 +60,15 @@ const COIN_TYPES :Dictionary = {
 		"friction": 0.5,         # Standard sliding resistance
 		"water_increase": 1,   # Base amount the water rises
 	},
+	"bouncy": {
+		"name": "bouncy",
+		"type": "silver",
+		"score": 5,
+		"weight": 0.5,           # Low mass, easily knocked around
+		"bounce": 0.6,           # Extremely high bounce for chaos
+		"friction": 0.1,         # Low friction to keep it moving
+		"water_increase": 0.8,   # Displaces very little water
+	},
 	"heavy": {
 		"name": "heavy",
 		"type": "gold",
@@ -68,14 +77,5 @@ const COIN_TYPES :Dictionary = {
 		"bounce": 0.0,           # Zero bounce so it slams down
 		"friction": 0.8,         # High friction so it doesn't slide easily
 		"water_increase": 1.5,   # Displaces much more water due to size
-	},
-	"bouncy": {
-		"name": "bouncy",
-		"type": "silver",
-		"score": 5,
-		"weight": 0.5,           # Low mass, easily knocked around
-		"bounce": 0.9,           # Extremely high bounce for chaos
-		"friction": 0.2,         # Low friction to keep it moving
-		"water_increase": 0.8,   # Displaces very little water
 	}
 }

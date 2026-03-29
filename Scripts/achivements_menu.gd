@@ -13,10 +13,6 @@ var master_list = {
 		"title": "Getting the Hang", 
 		"desc": "Amass 50 Favor."
 	},
-	"in_zone": {
-		"title": "In the Zone", 
-		"desc": "Amass 1000 Favor."
-	},
 	"close_call": {
 		"title": "Close Call!", 
 		"desc": "Recover the water level after a critical danger warning."
@@ -24,6 +20,10 @@ var master_list = {
 	"panic_button": {
 		"title": "Panic Button", 
 		"desc": "Purchase Fountain Sweep lifeline from the Wish Shop."
+	},
+	"in_zone": {
+		"title": "In the Zone", 
+		"desc": "Amass 1000 Favor."
 	}
 }
 func _ready() -> void:
