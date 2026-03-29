@@ -11,7 +11,8 @@ const SCENES :Dictionary = {
 	"game_over":"uid://cbfhggauibbmm",
 	"settings":"uid://b41gctw0eapfp",
 	"pause":"uid://d2tvabsqdrra",
-	"wish":"uid://djfcirar6eatp"
+	"wish":"uid://djfcirar6eatp",
+	"achievement":"uid://c7wm8b6nwl6s8"
 }
 
 const WISHES : Dictionary = {

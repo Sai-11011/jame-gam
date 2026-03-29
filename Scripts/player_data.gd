@@ -16,7 +16,6 @@ const SAVE_PATH = "user://fountain_save.cfg"
 
 func _ready() -> void:
 	load_game()
-	unlocked_achievements.clear()
 
 func load_game() -> void:
 	var config = ConfigFile.new()

@@ -2,6 +2,7 @@ extends Control
 
 @onready var main_scene := load(Global.SCENES.main) 
 @onready var settings := load(Global.SCENES.settings)
+@onready var achievement := load(Global.SCENES.achievement)
 @onready var credits := $Credits
 @onready var credit_text := $Credits/RichTextLabel
 @onready var info := $Info
@@ -121,3 +122,6 @@ func _on_back_button_pressed() -> void:
 func _on_intro_button_pressed() -> void:
 	AudioManager.play_button_click()
 	info.show()
+
+func _on_achievements_button_pressed() -> void:
+	get_tree().change_scene_to_packed(achievement)

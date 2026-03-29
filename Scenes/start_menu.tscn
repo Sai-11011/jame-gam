@@ -21,8 +21,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_juhg0")
 
-[node name="BG" type="Sprite2D" parent="." unique_id=2055757825]
-position = Vector2(640, 360)
+[node name="BG" type="TextureRect" parent="." unique_id=132789876]
+layout_mode = 0
 texture = ExtResource("2_a43kq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=15626682]
@@ -46,6 +46,7 @@ texture = ExtResource("3_626he")
 stretch_mode = 3
 
 [node name="StartButton" type="Button" parent="VBoxContainer" unique_id=1018985277]
+custom_minimum_size = Vector2(300, 80)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("3_a43kq")
@@ -71,14 +72,25 @@ theme_override_font_sizes/font_size = 36
 text = "Credits
 "
 
-[node name="SettingsButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=468211077]
-custom_minimum_size = Vector2(230, 0)
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=613840149]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 100
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=468211077]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("3_a43kq")
 theme_override_font_sizes/font_size = 36
 text = "Settings
 "
+
+[node name="AchievementsButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=321388228]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme = ExtResource("3_a43kq")
+text = "Achivements"
 
 [node name="Credits" type="Panel" parent="." unique_id=1768875410]
 visible = false
@@ -175,5 +187,6 @@ stretch_mode = 3
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/IntroButton" to="." method="_on_intro_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/AchievementsButton" to="." method="_on_achievements_button_pressed"]
 [connection signal="pressed" from="Info/BackButton" to="." method="_on_back_button_pressed"]
