@@ -2,8 +2,26 @@
 
 [ext_resource type="Script" uid="uid://w8cdi614kokg" path="res://Scripts/hud.gd" id="1_e0onf"]
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="2_fccik"]
+[ext_resource type="Texture2D" uid="uid://cxh3im6bu53fj" path="res://Assets/UI/button.png" id="3_bjfho"]
 
-[node name="Hud" type="Control" unique_id=2042463003]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fccik"]
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+corner_detail = 16
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_bjfho"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+texture = ExtResource("3_bjfho")
+texture_margin_left = 24.0
+texture_margin_right = 24.0
+expand_margin_left = 10.0
+expand_margin_right = 10.0
+modulate_color = Color(1, 1, 1, 0.7058824)
+
+[node name="Hud" type="Control" unique_id=2042463003 groups=["HUD"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +38,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 100
-theme_override_constants/margin_top = 50
+theme_override_constants/margin_top = 30
 theme_override_constants/margin_right = 100
 theme_override_constants/margin_bottom = 100
 
@@ -75,6 +93,30 @@ size_flags_horizontal = 0
 size_flags_vertical = 8
 theme_override_font_sizes/font_size = 24
 text = "Water Level : 0%"
+
+[node name="AchievementPopup" type="PanelContainer" parent="." unique_id=138327776]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = 16.0
+offset_top = 91.0
+offset_right = 316.0
+offset_bottom = 151.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fccik")
+
+[node name="TextureRect" type="Panel" parent="AchievementPopup" unique_id=501725868]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_bjfho")
+
+[node name="Label" type="Label" parent="AchievementPopup" unique_id=761822024]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_constants/outline_size = 5
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="MarginContainer/HBoxContainer/Button" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="MarginContainer/HBoxContainer/WishButton" to="." method="_on_wish_button_pressed"]

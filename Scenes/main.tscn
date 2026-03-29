@@ -60,7 +60,7 @@ shape = SubResource("RectangleShape2D_8gbba")
 
 [node name="Line" type="Sprite2D" parent="Fountain" unique_id=1742930681]
 z_index = 3
-position = Vector2(650, 424)
+position = Vector2(650, 430)
 texture = ExtResource("3_21xkr")
 metadata/_edit_lock_ = true
 

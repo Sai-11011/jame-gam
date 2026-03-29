@@ -5,6 +5,7 @@
 [ext_resource type="Theme" uid="uid://csvokgaaskchv" path="res://Themes/button.tres" id="3_j2dne"]
 
 [node name="Settings" type="Control" unique_id=1534037444]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

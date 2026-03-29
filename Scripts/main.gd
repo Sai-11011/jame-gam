@@ -20,6 +20,7 @@ var total_water_displacement: float = 0.0
 # The starting state of the water (Empty)
 var water_start_scale_y: float = 0.85
 var water_start_pos_y: float = 510.0
+var survived_danger: bool = false
 
 # The maximum state of the water (Game Over)
 var water_max_scale_y: float = 1.3
@@ -120,7 +121,13 @@ func _on_coin_clicked(clicked_coin: RigidBody2D) -> void:
 		
 	# 3. Add the specific coin's score! (Bronze +1, Silver +3, Gold +5)
 	PlayerData.score += clicked_coin.score
-	
+	# Achievement Checks
+	if PlayerData.score > 0:
+		PlayerData.unlock_achievement("first_catch", "First Catch")
+	if PlayerData.score >= 25:
+		PlayerData.unlock_achievement("getting_hang", "Getting the Hang")
+	if PlayerData.score >= 100:
+		PlayerData.unlock_achievement("in_zone", "In the Zone")
 	# 4. Wake up the pile so gravity takes over
 	get_tree().call_group("Coins", "wake_up")
 	
@@ -160,6 +167,7 @@ func update_water_level() -> void:
 	# --- 2. DANGER PULSE INDICATOR ---
 	if fill_percent >= 0.85: 
 		# If it's 85% full and not already animating, start the pulse
+		survived_danger = true
 		if not danger_tween or not danger_tween.is_valid():
 			laser_line.modulate = Color(1, 0, 0, 1) # Tint the laser line red
 			danger_tween = create_tween().set_loops().set_trans(Tween.TRANS_SINE) # Loops infinitely
@@ -173,6 +181,10 @@ func update_water_level() -> void:
 			danger_tween.kill()
 		laser_line.scale.y = 1.0
 		laser_line.modulate = Color(1, 1, 1, 1) # Reset to normal color
+		
+		if fill_percent < 0.60 and survived_danger:
+			survived_danger = false
+			PlayerData.unlock_achievement("close_call", "Close Call!")
 
 	# --- 3. EXISTING WATER MATH ---
 	var target_scale_y = lerp(water_start_scale_y, water_max_scale_y, fill_percent)

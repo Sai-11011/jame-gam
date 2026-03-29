@@ -56,6 +56,7 @@ func _on_confirm_button_pressed() -> void:
 		
 		if selected_wish_id == "wipe":
 			var all_coins = get_tree().get_nodes_in_group("Coins")
+			PlayerData.unlock_achievement("panic_button", "Panic Button")
 			for coin in all_coins: coin.pop()
 			
 		elif selected_wish_id == "bronze_banish":

@@ -8,8 +8,8 @@
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a43kq"]
 bg_color = Color(0, 0, 0, 0.78039217)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_626he"]
-bg_color = Color(0, 0, 0, 0.7058824)
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_a43kq"]
+texture = ExtResource("2_a43kq")
 
 [node name="StartMenu" type="Control" unique_id=109261281]
 process_mode = 3
@@ -21,8 +21,8 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_juhg0")
 
-[node name="BG" type="Sprite2D" parent="." unique_id=2055757825]
-position = Vector2(640, 360)
+[node name="BG" type="TextureRect" parent="." unique_id=132789876]
+layout_mode = 0
 texture = ExtResource("2_a43kq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=15626682]
@@ -46,6 +46,7 @@ texture = ExtResource("3_626he")
 stretch_mode = 3
 
 [node name="StartButton" type="Button" parent="VBoxContainer" unique_id=1018985277]
+custom_minimum_size = Vector2(300, 80)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("3_a43kq")
@@ -71,14 +72,25 @@ theme_override_font_sizes/font_size = 36
 text = "Credits
 "
 
-[node name="SettingsButton" type="Button" parent="VBoxContainer/HBoxContainer" unique_id=468211077]
-custom_minimum_size = Vector2(230, 0)
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer" unique_id=613840149]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 100
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=468211077]
+custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme = ExtResource("3_a43kq")
 theme_override_font_sizes/font_size = 36
 text = "Settings
 "
+
+[node name="AchievementsButton" type="Button" parent="VBoxContainer/HBoxContainer2" unique_id=321388228]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme = ExtResource("3_a43kq")
+text = "Achivements"
 
 [node name="Credits" type="Panel" parent="." unique_id=1768875410]
 visible = false
@@ -115,13 +127,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_626he")
+theme_override_styles/panel = SubResource("StyleBoxTexture_a43kq")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Info" unique_id=785888389]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 107.0
+offset_bottom = 2.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/normal_font_size = 24
@@ -130,18 +144,14 @@ theme_override_font_sizes/bold_italics_font_size = 24
 theme_override_font_sizes/italics_font_size = 24
 theme_override_font_sizes/mono_font_size = 24
 bbcode_enabled = true
-text = "[center][font_size=24][pulse freq=0.5 color=#ffffff80][color=#ffd700][b]The Fountain of Wishes[/b][/color][/pulse][/font_size]
+text = "[center][font_size=20]Coins will be tossed into the fountain [/font_size]
 
-An endless shower of magic coins is filling the basin. 
-Your goal is simple: [b]Survive as long as you can.[/b]
+Shatter them to claim [color=#ffd700][b]Favor[/b][/color] and buy lifelines from the [color=#ffb6c1]Wish Shop[/color].
 
-Click the falling coins to shatter them, claim their [color=#ffd700]Favor[/color], and keep the [color=#40e0d0]water level[/color] from overflowing. 
-
-Spend your Favor in the [color=#ffb6c1]Wish Shop[/color] to unleash powerful lifelines when the chaos becomes too much. 
+But be careful! Don’t let the [color=#40e0d0]water overflow[/color].
 
 [font_size=16] [/font_size]
-
-[wave amp=20.0 freq=3.0 connected=1][color=#b0c4de]How long can you endure the cascade?[/color][/wave][/center]"
+[wave amp=20.0 freq=3.0 connected=1][color=#b0c4de][b]Survive as long as you can.[/b][/color][/wave][/center]"
 fit_content = true
 scroll_active = false
 horizontal_alignment = 1
@@ -154,18 +164,29 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -45.0
-offset_top = -89.0
-offset_right = 46.0
-offset_bottom = -34.0
+offset_left = -49.0
+offset_top = -121.0
+offset_right = 42.0
+offset_bottom = -66.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("3_a43kq")
 theme_override_font_sizes/font_size = 24
 text = "Back"
 
+[node name="Title" type="TextureRect" parent="Info" unique_id=327226698]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 77.0
+offset_right = 851.0
+offset_bottom = 224.0
+texture = ExtResource("3_626he")
+expand_mode = 1
+stretch_mode = 3
+
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/IntroButton" to="." method="_on_intro_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/CreditsButton" to="." method="_on_credits_button_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/AchievementsButton" to="." method="_on_achievements_button_pressed"]
 [connection signal="pressed" from="Info/BackButton" to="." method="_on_back_button_pressed"]

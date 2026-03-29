@@ -38,6 +38,7 @@ mouse_cursor/custom_image="uid://c1t74v1uqfjr2"
 Coins=""
 Camera=""
 Main=""
+HUD=""
 
 [gui]
 
